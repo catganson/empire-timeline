@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Structural Transformation of the American Political Economy</title>
+  <style>
+    :root {
+      --bg: #0d2746;
+      --paper: rgba(16, 43, 76, 0.78);
+      --ink: #eef6ff;
+      --muted: #a8c4e2;
+      --line: #7fb4ea;
+      --accent: #d7ebff;
+      --border: rgba(168, 196, 226, 0.28);
+      --shadow: none;
+      --domestic: #205375;
+      --global: #8f3b76;
+      --monetary: #a65d03;
+      --security: #5d4037;
+      --ideology: #4f772d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      position: relative;
+      margin: 0;
+      font-family: "Avenir Next", "Century Gothic", "Futura", "Trebuchet MS", sans-serif;
+      color: var(--ink);
+      background: linear-gradient(160deg, #0c2340 0%, #10325b 52%, #14406f 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 28px clamp(12px, 3.2vw, 40px) 34px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.1rem, 2vw, 1.65rem);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: 0.01em;
+      text-align: center;
+    }
+
+    h2 {
+      margin: 10px 0 0;
+      color: var(--muted);
+      width: 100%;
+      font-size: 1.04rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      text-align: center;
+    }
+
+    h3 {
+      margin: 14px 0 0;
+      color: #dcecff;
+      width: 100%;
+      font-size: 0.78rem;
+      font-weight: 500;
+      text-align: center;
+      line-height: 1.45;
+      white-space: pre-line;
+    }
+
+    .influence-list {
+      margin: 4px 0 0;
+      color: #c7ddf3;
+      font-size: 0.7rem;
+      text-align: center;
+      line-height: 1.42;
+    }
+
+    .influences-hidden {
+      display: none;
+    }
+
+    .chart {
+      position: relative;
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      overflow: hidden;
+      padding: 22px 6px 12px;
+    }
+
+    .chart-inner {
+      position: relative;
+      width: 100%;
+      min-width: 0;
+      height: 350px;
+    }
+
+    .year-tick {
+      position: absolute;
+      transform: translateX(-50%);
+      color: var(--muted);
+      font-size: 0.62rem;
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+    }
+
+    .anchor-stem {
+      position: absolute;
+      width: 1px;
+      background: rgba(215, 235, 255, 0.48);
+      transform: translateX(-50%);
+    }
+
+    .anchor-year {
+      position: absolute;
+      transform: translateX(-50%);
+      color: #d9ebff;
+      font-size: 0.7rem;
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+    }
+
+    .reserve-anchor-stem {
+      position: absolute;
+      width: 1px;
+      background: rgba(182, 232, 179, 0.55);
+      transform: translateX(-50%);
+    }
+
+    .reserve-anchor-year {
+      position: absolute;
+      transform: translateX(-50%);
+      color: #c8edc4;
+      font-size: 0.68rem;
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+    }
+
+    .trend {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .trend-path {
+      fill: none;
+      stroke: url(#mainLineGrad);
+      stroke-width: 2.1;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.98;
+    }
+
+    .decade-path {
+      fill: none;
+      stroke: rgba(215, 235, 255, 0.48);
+      stroke-width: 0.8;
+      stroke-linecap: round;
+      opacity: 0.8;
+    }
+
+    .reserve-path {
+      fill: none;
+      stroke: url(#reserveLineGrad);
+      stroke-width: 1.9;
+      stroke-linecap: round;
+      opacity: 0.96;
+    }
+
+    .main-base-path {
+      fill: none;
+      stroke: #c66f14;
+      stroke-width: 2.3;
+      stroke-linecap: round;
+      opacity: 0.95;
+    }
+
+    .reserve-base-path {
+      fill: none;
+      stroke: #4f9f43;
+      stroke-width: 2.1;
+      stroke-linecap: round;
+      opacity: 0.95;
+    }
+
+    .point {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--line);
+      border: 2px solid rgba(255, 255, 255, 0.88);
+      box-shadow: 0 1px 10px rgba(165, 203, 240, 0.4);
+      cursor: pointer;
+      transition: transform 120ms ease, opacity 140ms ease;
+    }
+
+    .point:hover,
+    .point:focus-visible,
+    .point.active {
+      transform: translate(-50%, -50%) scale(1.36);
+      z-index: 10;
+      outline: none;
+    }
+
+    .reserve-point {
+      border-color: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 1px 9px rgba(144, 213, 138, 0.35);
+    }
+
+    .track-label {
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.66rem;
+      color: #d2e5f9;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .detail {
+      margin: 14px auto 0;
+      width: min(940px, 92%);
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      padding: 6px 0 0;
+      min-height: 0;
+    }
+
+    .detail h2 {
+      margin: 0;
+      font-size: 1.03rem;
+      line-height: 1.2;
+    }
+
+    .meta {
+      margin: 5px 0 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .detail p {
+      margin: 9px 0 0;
+      font-size: 0.92rem;
+      line-height: 1.43;
+      width: 100%;
+    }
+
+    .foot {
+      margin-top: 92px;
+      color: #c1d8ef;
+      font-size: 0.64rem;
+      line-height: 1.4;
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 760px) {
+      .chart {
+        padding: 14px 2px 12px;
+      }
+
+      .chart-inner {
+        height: 300px;
+      }
+
+      .detail {
+        min-height: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>Structural Transformation of the American Political Economy</h1>
+    <h2>Dual timeline from 1865 to projected late-phase development</h2>
+    <div class="influences-hidden">
+      <h3>Structural / Conceptual Influences</h3>
+      <p class="influence-list">Adolf Augustus Berle Jr. • Gardiner Coit Means • James Burnham • John Kenneth Galbraith • Fernand Braudel • Giovanni Arrighi • Michael Hudson • Logo Daedalus</p>
+      <h3>Philosophical Influences</h3>
+      <p class="influence-list">Alexandre Kojève • Carl Schmitt</p>
+    </div>
+
+    <section class="chart" aria-label="Interactive timeline chart">
+      <div class="chart-inner" id="chartInner">
+        <svg class="trend" viewBox="0 0 1200 260" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="mainLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ffd9a8"></stop>
+              <stop offset="100%" stop-color="#b65300"></stop>
+            </linearGradient>
+            <linearGradient id="reserveLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#d2f2cd"></stop>
+              <stop offset="100%" stop-color="#2f8a2b"></stop>
+            </linearGradient>
+          </defs>
+          <path id="mainBasePath" class="main-base-path" d=""></path>
+          <path id="trendPath" class="trend-path" d=""></path>
+          <path id="reserveBasePath" class="reserve-base-path" d=""></path>
+          <path id="reservePath" class="reserve-path" d=""></path>
+          <path id="decadePath" class="decade-path" d=""></path>
+        </svg>
+        <div class="track-label" id="mainTrackLabel">Political Economy Arc</div>
+        <div class="track-label" id="reserveTrackLabel">Reserve Currency Evolution</div>
+      </div>
+    </section>
+
+    <article class="detail" id="detail" aria-live="polite"></article>
+
+    <footer class="foot">Dates are approximate period anchors, not exhaustive historiography.</footer>
+  </main>
+
+  <script>
+    const phases = [
+      {
+        idx: 1,
+        title: "Classical Capitalism / Industrial Expansion",
+        years: "1865-1914",
+        summary: "America still has more obvious owners, industrialists, railroad barons, commodity men, and a more legible national bourgeoisie. This is the older capitalism that is argued to have essentially disappeared.",
+        tags: ["domestic", "global"],
+        year: 1890,
+        y: 76
+      },
+      {
+        idx: 2,
+        title: "Corporate-Managerial Consolidation (Corporatism / Bourgeois Socialism)",
+        years: "1900-1940",
+        summary: "The old capitalist class is absorbed into a more bureaucratic system in which managers, corporations, regulators, the military apparatus, and finance merge into one administered order. This is where \"capitalism\" gets renamed into the \"market system,\" while the real structure becomes corporatist / bourgeois-socialist / managerial.",
+        tags: ["domestic", "monetary", "ideology"],
+        year: 1920,
+        y: 67
+      },
+      {
+        idx: 3,
+        title: "WWII Mobilization and Cold War Hypertrophy",
+        years: "1940-1971",
+        summary: "To fight the Soviets, America builds massive state capacity, big science, military planning, intelligence infrastructure, and global alliance systems; America effectively becomes a larger, more prosperous Soviet Union, same kind of civilizational machine, just more successful and culturally more libertarian.",
+        tags: ["security", "global", "domestic"],
+        year: 1955,
+        y: 44
+      },
+      {
+        idx: 4,
+        title: "Universal Empire Under Anti-Imperial Language",
+        years: "1945-1970s",
+        summary: "America presents itself as anti-imperial, democratic, humanitarian, and morally universal, while actually dismantling rival regional power blocs and subordinating smaller states to a wider U.S.-led super-empire. The empire's preferred form is not unstable open fascism but dependable managed client regimes integrated into American capital markets.",
+        tags: ["global", "ideology", "monetary"],
+        year: 1962,
+        y: 41
+      },
+      {
+        idx: 5,
+        title: "Post-1971 Financial Turn",
+        years: "1971-1990s",
+        summary: "Once the productive rise of the mid-century stalls, the system flips into debt-financed imperial maintenance: closing the gold window, funding empire through debt, reserve-currency privilege, black-market dollarization, financial engineering, and later new asset infrastructures. This is where the \"real line\" starts going down even if headline numbers keep going up.",
+        tags: ["monetary", "global"],
+        year: 1983,
+        y: 52
+      },
+      {
+        idx: 6,
+        title: "Domestic Stagnation Masked by Asset Inflation",
+        years: "1990s-2010s",
+        summary: "The bridges stop being built, infrastructure ages, middle-class life degrades, but the system substitutes financial bubbles, abstractions, GDP metrics, culture war, and managerial euphemism for real civilizational renewal. The Fed, public politics, and even partisan conflict become mostly theatrical layers on top of a deeper managerial continuity.",
+        tags: ["domestic", "monetary", "ideology"],
+        year: 2004,
+        y: 65
+      },
+      {
+        idx: 7,
+        title: "Failed Populist Rupture",
+        years: "2016-2020",
+        summary: "Trump appears not as a real sovereign refounder but as a kind of Gorbachev / Marius figure: an embarrassment, a symptom, maybe a transitional public face, but not someone with the infrastructure or actual sovereign machinery to reverse the system. He reveals cracks; he does not rule the structure.",
+        tags: ["domestic", "ideology"],
+        year: 2018,
+        y: 70
+      },
+      {
+        idx: 8,
+        title: "Ideological Recomposition",
+        years: "2020s",
+        summary: "The next hegemonic phase is not MAGA populism but a merger of libertarian-left culture and authoritarian-right force: progressive social norms, tech management, therapeutic universalism, NGO/Catholic-social-democratic mediation, and continued bombing / policing abroad. In other words, empire survives by updating its moral language and personnel.",
+        tags: ["ideology", "domestic", "global"],
+        year: 2023,
+        y: 63
+      },
+      {
+        idx: 9,
+        title: "AI / Tech / Defense Fusion",
+        years: "2020s-2030s (emerging)",
+        summary: "As productive legitimacy weakens, the system pours money into strategic fictions and \"marketing of the unknown\": AGI, chips, data centers, defense-tech, Palantir-style integration, blockchain, stablecoins. Even failed bubbles will be rescued because they are folded into national-security logic.",
+        tags: ["security", "monetary", "global"],
+        year: 2029,
+        y: 57
+      },
+      {
+        idx: 10,
+        title: "Internationalization of Imperial Core",
+        years: "long-term trend",
+        summary: "The long-term tendency is that \"America\" as a specifically national project gets wound down and absorbed into a more international managerial-security apparatus: NATO-adjacent, finance-adjacent, NGO-adjacent, tech-adjacent, less visibly American, more transnational. America becomes one occupied zone or platform inside a wider non-state imperial order.",
+        tags: ["global", "ideology", "security"],
+        year: 2038,
+        y: 54
+      },
+      {
+        idx: 11,
+        title: "Domestic Governance Through Emergencies",
+        years: "Katrina (2005) onward",
+        summary: "Because infrastructure decays and nobody takes responsibility, the empire increasingly governs domestically through emergencies: hurricanes, riots, migration shocks, local breakdowns, natural disasters, security events. In these zones, private contractors and mercenary forms become more visible in ordinary American life. Katrina is treated as an early preview.",
+        tags: ["domestic", "security"],
+        year: 2042,
+        y: 61
+      },
+      {
+        idx: 12,
+        title: "Patchwork Internal Decline",
+        years: "late phase tendency",
+        summary: "The image is not one dramatic red-vs-blue showdown, but a late-Roman drift into anarchy, hollow institutions, regional power vacuums, unequal collapse, and privatized coercion. The imperial shell remains, but the interior frays.",
+        tags: ["domestic", "security", "ideology"],
+        year: 2048,
+        y: 71
+      },
+      {
+        idx: 13,
+        title: "Final Operating Model",
+        years: "potential equilibrium",
+        summary: "The American military remains as an equilibrium-maintaining naval / logistics force, while more of the real dirty work is done by contractors, proxy forces, mercenaries, finance, platforms, and administrative systems. At the same time, ordinary Americans are tied in through pensions, 401(k)s, stablecoin-style asset infrastructures, and dependency on the same system that is decaying.",
+        tags: ["security", "global", "monetary"],
+        year: 2054,
+        y: 68
+      },
+      {
+        idx: 14,
+        title: "Long Decline, Not Sudden Collapse",
+        years: "multi-decade wind-down",
+        summary: "The model imagines not a sudden Soviet-style overnight collapse but a prolonged wind-down in which contradictions deepen, the state repeatedly intervenes to postpone reckoning, and the final break may take decades. The system keeps absorbing shocks until eventually something gives, but no one can identify the exact straw beforehand.",
+        tags: ["domestic", "global", "monetary", "ideology"],
+        year: 2062,
+        y: 74
+      }
+    ];
+
+    const reservePhases = [
+      {
+        era: 1,
+        title: "Industrial Expansion under the Classical Gold Standard",
+        dates: "1865-1900",
+        reserveRegime: "Classical Gold Standard (Sterling-centered system)",
+        usPosition: "Emerging industrial economy; moving toward creditor status",
+        mechanism: "Trade expansion and industrialization attract gold inflows and capital investment",
+        description: "The U.S. industrializes rapidly following the Civil War. International monetary power remains centered in London and the British pound. American exports and industrial capacity grow, gradually positioning the U.S. to accumulate gold and move toward creditor status.",
+        year: 1883
+      },
+      {
+        era: 2,
+        title: "Rise of the Corporate-Managerial Economy",
+        dates: "1900-1914",
+        reserveRegime: "Gold Standard with rising New York financial influence",
+        usPosition: "Accumulating gold and industrial surpluses",
+        mechanism: "Large corporations and financial markets begin consolidating economic coordination",
+        description: "The U.S. economy becomes dominated by large corporations and managerial hierarchies. Wall Street grows into a major global financial center. Industrial exports and gold accumulation strengthen the American financial position relative to Europe.",
+        year: 1907
+      },
+      {
+        era: 3,
+        title: "World War I Creditor Pivot",
+        dates: "1914-1918",
+        reserveRegime: "Gold standard disrupted by wartime finance",
+        usPosition: "Becomes primary global creditor",
+        mechanism: "War loans from the U.S. to European allies create massive international debt obligations",
+        description: "European powers borrow heavily from American banks and the U.S. government to finance the war. This transforms the United States from a debtor nation into the world's largest creditor and begins shifting financial power from London to New York.",
+        year: 1916
+      },
+      {
+        era: 4,
+        title: "Interwar Debt System and Financial Fragility",
+        dates: "1919-1939",
+        reserveRegime: "Unstable gold exchange standard",
+        usPosition: "Dominant creditor nation",
+        mechanism: "Circular debt flows: U.S. loans to Europe finance reparations and debt payments back to the U.S.",
+        description: "An unstable international debt structure emerges. Germany pays reparations to the Allies, who use those payments to service debts to the United States. This fragile financial structure contributes to global financial instability culminating in the Great Depression.",
+        year: 1929
+      },
+      {
+        era: 5,
+        title: "World War II and the Bretton Woods Design",
+        dates: "1939-1945",
+        reserveRegime: "Transition to Bretton Woods system",
+        usPosition: "Industrial and financial superpower",
+        mechanism: "War mobilization and postwar planning establish the dollar as the central international currency",
+        description: "The United States emerges from World War II with unmatched industrial capacity and gold reserves. The Bretton Woods system is designed, establishing the dollar as the anchor of the international monetary system with gold convertibility.",
+        year: 1942
+      },
+      {
+        era: 6,
+        title: "Bretton Woods Creditor Empire",
+        dates: "1945-1965",
+        reserveRegime: "Gold-backed dollar system",
+        usPosition: "Global creditor and industrial leader",
+        mechanism: "Trade surpluses and overseas investment distribute dollars globally while maintaining gold convertibility",
+        description: "The dollar becomes the world's primary reserve currency. The U.S. runs trade surpluses and finances global reconstruction through programs like the Marshall Plan. Allied economies depend on dollar liquidity and American industrial output.",
+        year: 1955
+      },
+      {
+        era: 7,
+        title: "Dollar Overhang and Bretton Woods Strain",
+        dates: "1965-1971",
+        reserveRegime: "Bretton Woods under pressure",
+        usPosition: "Rising deficits undermine gold convertibility",
+        mechanism: "Overseas military spending and foreign investment create excess dollars relative to U.S. gold reserves",
+        description: "Vietnam War spending and global military commitments produce growing balance-of-payments deficits. Foreign governments accumulate more dollars than the U.S. can redeem for gold, creating mounting pressure on the Bretton Woods system.",
+        year: 1968
+      },
+      {
+        era: 8,
+        title: "The 1971 Monetary Break",
+        dates: "1971",
+        reserveRegime: "End of gold convertibility",
+        usPosition: "Transition from creditor empire to monetary hegemon",
+        mechanism: "Closure of the gold window transforms the dollar into a purely fiat reserve currency",
+        description: "President Nixon ends the convertibility of dollars into gold. The Bretton Woods system collapses, and the international monetary system transitions to a dollar-centered fiat regime.",
+        year: 1971
+      },
+      {
+        era: 9,
+        title: "Treasury-Bill Standard and Deficit Recycling",
+        dates: "1971-1990",
+        reserveRegime: "Treasury bond reserve system",
+        usPosition: "Structural balance-of-payments deficits",
+        mechanism: "Foreign central banks recycle dollar reserves into U.S. Treasury securities",
+        description: "The United States begins running persistent trade and balance-of-payments deficits. Foreign governments accumulate dollars and reinvest them into Treasury bonds, effectively financing American deficits and sustaining the global dollar system.",
+        year: 1981
+      },
+      {
+        era: 10,
+        title: "Financial Globalization and Wall Street Expansion",
+        dates: "1990-2008",
+        reserveRegime: "Dollar-based global financial system",
+        usPosition: "Debtor state with dominant financial markets",
+        mechanism: "Global trade surpluses flow into U.S. financial markets and Treasury securities",
+        description: "The global economy becomes increasingly financialized. Wall Street becomes the central allocator of global capital, while foreign surplus nations accumulate large dollar reserves invested in U.S. assets.",
+        year: 1999
+      },
+      {
+        era: 11,
+        title: "Post-2008 Global Liquidity Regime",
+        dates: "2008-2012",
+        reserveRegime: "Central-bank-driven dollar liquidity system",
+        usPosition: "Federal Reserve as global lender of last resort",
+        mechanism: "Massive monetary expansion and swap lines stabilize the global financial system",
+        description: "The global financial crisis forces central banks to coordinate unprecedented monetary intervention. The Federal Reserve expands its balance sheet and supplies dollar liquidity to global financial institutions.",
+        year: 2010
+      },
+      {
+        era: 12,
+        title: "Asset Inflation and Financial Maintenance",
+        dates: "2012-2019",
+        reserveRegime: "Dollar liquidity supported by central banks and financial markets",
+        usPosition: "Persistent deficits alongside rising asset markets",
+        mechanism: "Financial markets and asset inflation sustain economic growth amid domestic stagnation",
+        description: "Economic growth becomes increasingly dependent on financial markets and asset price inflation rather than industrial expansion. The global reserve system remains centered on U.S. Treasury markets.",
+        year: 2015
+      },
+      {
+        era: 13,
+        title: "Strategic Technology and Defense Finance",
+        dates: "2020-Present",
+        reserveRegime: "Dollar system integrated with strategic industrial policy",
+        usPosition: "Financial center supporting technology and defense sectors",
+        mechanism: "Public spending and financial markets channel capital into strategic industries such as semiconductors, AI, and defense technologies",
+        description: "The global dollar system increasingly supports strategic technology and defense industries, as financial markets, government policy, and national security interests become closely intertwined. At the same time, some foreign governments are rebuilding central bank gold reserves in a possible effort to regain monetary sovereignty outside the Treasury-bill reserve system that has financed U.S. balance-of-payments deficits since WWII.",
+        year: 2023
+      },
+      {
+        era: 14,
+        title: "Possible Future Reserve Transition",
+        dates: "Future Projection",
+        reserveRegime: "Potential digital dollar, stablecoin, or multipolar reserve system",
+        usPosition: "Reserve issuer managing global liquidity",
+        mechanism: "Treasury markets and digital financial infrastructure maintain global dollar dominance",
+        description: "Future reserve structures may incorporate digital currency infrastructure or new financial mechanisms. However, the fundamental dynamic will likely remain: global demand for dollar assets sustains the American financial system despite persistent deficits until a new monetary system replaces it.",
+        year: 2042
+      }
+    ];
+
+    const chartInner = document.getElementById("chartInner");
+    const detail = document.getElementById("detail");
+    const mainBasePath = document.getElementById("mainBasePath");
+    const trendPath = document.getElementById("trendPath");
+    const reserveBasePath = document.getElementById("reserveBasePath");
+    const reservePath = document.getElementById("reservePath");
+    const decadePath = document.getElementById("decadePath");
+    const mainTrackLabel = document.getElementById("mainTrackLabel");
+    const reserveTrackLabel = document.getElementById("reserveTrackLabel");
+
+    const minYear = 1860;
+    const maxYear = 2065;
+    const tickYears = Array.from({ length: 21 }, (_, i) => 1860 + i * 10);
+
+    let chartW = 0;
+    let chartH = 0;
+    let padX = 36;
+    let usableW = 0;
+    let mainY = 0;
+    let reserveY = 0;
+    let decadeY = 0;
+
+    const toX = (year) => padX + ((year - minYear) / (maxYear - minYear)) * usableW;
+
+    const points = [];
+    const reservePoints = [];
+    const ticks = [];
+    const anchors = [];
+    const reserveAnchors = [];
+
+    function hexToRgb(hex) {
+      const clean = hex.replace("#", "");
+      return {
+        r: parseInt(clean.slice(0, 2), 16),
+        g: parseInt(clean.slice(2, 4), 16),
+        b: parseInt(clean.slice(4, 6), 16)
+      };
+    }
+
+    function mixColor(a, b, t) {
+      const ca = hexToRgb(a);
+      const cb = hexToRgb(b);
+      const r = Math.round(ca.r + (cb.r - ca.r) * t);
+      const g = Math.round(ca.g + (cb.g - ca.g) * t);
+      const bch = Math.round(ca.b + (cb.b - ca.b) * t);
+      return `rgb(${r}, ${g}, ${bch})`;
+    }
+
+    function computeLayout() {
+      chartW = Math.max(chartInner.clientWidth, 320);
+      chartH = Math.max(chartInner.clientHeight, 180);
+      padX = Math.max(22, Math.min(54, Math.round(chartW * 0.045)));
+      usableW = Math.max(1, chartW - padX * 2);
+      mainY = Math.round(chartH * 0.34);
+      reserveY = Math.round(chartH * 0.58);
+      decadeY = Math.round(chartH * 0.83);
+      chartInner.style.height = `${chartH}px`;
+      chartInner.querySelector(".trend").setAttribute("viewBox", `0 0 ${chartW} ${chartH}`);
+    }
+
+    function drawAxisTicks() {
+      tickYears.forEach((year) => {
+        const t = document.createElement("div");
+        t.className = "year-tick";
+        t.dataset.year = String(year);
+        t.textContent = year;
+        chartInner.appendChild(t);
+        ticks.push(t);
+      });
+    }
+
+    function drawPoints() {
+      phases.forEach((p) => {
+        const el = document.createElement("button");
+        el.className = "point";
+        el.dataset.index = p.idx;
+        el.dataset.year = String(p.year);
+        el.type = "button";
+        el.ariaLabel = `Phase ${p.idx}: ${p.title}`;
+        el.addEventListener("mouseenter", () => showDetail(p.idx));
+        el.addEventListener("focus", () => showDetail(p.idx));
+        el.addEventListener("click", () => showDetail(p.idx));
+        chartInner.appendChild(el);
+        points.push(el);
+
+        const stem = document.createElement("div");
+        stem.className = "anchor-stem";
+        stem.dataset.year = String(p.year);
+        chartInner.appendChild(stem);
+
+        const label = document.createElement("div");
+        label.className = "anchor-year";
+        label.dataset.year = String(p.year);
+        label.textContent = String(p.year);
+        chartInner.appendChild(label);
+
+        anchors.push({ year: p.year, stem, label });
+      });
+
+      reservePhases.forEach((p) => {
+        const el = document.createElement("button");
+        el.className = "point reserve-point";
+        el.dataset.era = String(p.era);
+        el.dataset.year = String(p.year);
+        el.type = "button";
+        el.ariaLabel = `Reserve era ${p.era}: ${p.title}`;
+        el.addEventListener("mouseenter", () => showReserveDetail(p.era));
+        el.addEventListener("focus", () => showReserveDetail(p.era));
+        el.addEventListener("click", () => showReserveDetail(p.era));
+        chartInner.appendChild(el);
+        reservePoints.push(el);
+
+        const stem = document.createElement("div");
+        stem.className = "reserve-anchor-stem";
+        stem.dataset.year = String(p.year);
+        chartInner.appendChild(stem);
+
+        const label = document.createElement("div");
+        label.className = "reserve-anchor-year";
+        label.dataset.year = String(p.year);
+        label.textContent = String(p.year);
+        chartInner.appendChild(label);
+
+        reserveAnchors.push({ year: p.year, stem, label });
+      });
+    }
+
+    function applyResponsiveLayout() {
+      computeLayout();
+      const mainLine = `M${toX(minYear).toFixed(2)} ${mainY.toFixed(2)} L${toX(maxYear).toFixed(2)} ${mainY.toFixed(2)}`;
+      mainBasePath.setAttribute("d", mainLine);
+      trendPath.setAttribute("d", mainLine);
+      const reserveLine = `M${toX(minYear).toFixed(2)} ${reserveY.toFixed(2)} L${toX(maxYear).toFixed(2)} ${reserveY.toFixed(2)}`;
+      reserveBasePath.setAttribute("d", reserveLine);
+      reservePath.setAttribute("d", reserveLine);
+      const decadeLine = `M${toX(1860).toFixed(2)} ${decadeY.toFixed(2)} L${toX(2060).toFixed(2)} ${decadeY.toFixed(2)}`;
+      decadePath.setAttribute("d", decadeLine);
+      mainTrackLabel.style.top = `${mainY - 64}px`;
+      reserveTrackLabel.style.top = `${reserveY - 52}px`;
+
+      points.forEach((el) => {
+        const year = Number(el.dataset.year);
+        el.style.left = `${toX(year)}px`;
+        el.style.top = `${mainY}px`;
+        const t = Math.min(1, Math.max(0, (year - minYear) / (maxYear - minYear)));
+        el.style.background = mixColor("#f6c78b", "#a34e00", t);
+        el.style.boxShadow = `0 1px 10px ${mixColor("#f6c78b", "#a34e00", Math.min(1, t + 0.08))}55`;
+      });
+
+      reservePoints.forEach((el) => {
+        const year = Number(el.dataset.year);
+        el.style.left = `${toX(year)}px`;
+        el.style.top = `${reserveY}px`;
+        const t = Math.min(1, Math.max(0, (year - minYear) / (maxYear - minYear)));
+        el.style.background = mixColor("#bfe8b8", "#2f7a2b", t);
+        el.style.boxShadow = `0 1px 9px ${mixColor("#bfe8b8", "#2f7a2b", Math.min(1, t + 0.08))}66`;
+      });
+
+      ticks.forEach((el) => {
+        const year = Number(el.dataset.year);
+        el.style.left = `${toX(year)}px`;
+        el.style.top = `${decadeY + 7}px`;
+      });
+
+      const sortedAnchors = anchors
+        .map((a, i) => ({ i, x: toX(a.year), year: a.year }))
+        .sort((a, b) => a.x - b.x);
+      let lastX = -Infinity;
+      let tier = 0;
+      sortedAnchors.forEach((a) => {
+        if (a.x - lastX < 34) {
+          tier = (tier + 1) % 3;
+        } else {
+          tier = 0;
+        }
+        a.tier = tier;
+        lastX = a.x;
+      });
+
+      sortedAnchors.forEach((a) => {
+        const node = anchors[a.i];
+        const x = a.x;
+        const len = 24 + a.tier * 13;
+        node.stem.style.left = `${x}px`;
+        node.stem.style.top = `${mainY - len}px`;
+        node.stem.style.height = `${len}px`;
+        node.label.style.left = `${x}px`;
+        node.label.style.top = `${mainY - len - 16}px`;
+      });
+
+      const sortedReserveAnchors = reserveAnchors
+        .map((a, i) => ({ i, x: toX(a.year), year: a.year }))
+        .sort((a, b) => a.x - b.x);
+      lastX = -Infinity;
+      tier = 0;
+      sortedReserveAnchors.forEach((a) => {
+        if (a.x - lastX < 34) {
+          tier = (tier + 1) % 3;
+        } else {
+          tier = 0;
+        }
+        a.tier = tier;
+        lastX = a.x;
+      });
+
+      sortedReserveAnchors.forEach((a) => {
+        const node = reserveAnchors[a.i];
+        const x = a.x;
+        const len = 20 + a.tier * 11;
+        node.stem.style.left = `${x}px`;
+        node.stem.style.top = `${reserveY + 1}px`;
+        node.stem.style.height = `${len}px`;
+        node.label.style.left = `${x}px`;
+        node.label.style.top = `${reserveY + len + 4}px`;
+      });
+    }
+
+    function showDetail(idx) {
+      const p = phases.find((item) => item.idx === idx);
+      if (!p) return;
+      points.forEach((pt) => pt.classList.toggle("active", Number(pt.dataset.index) === idx));
+      reservePoints.forEach((pt) => pt.classList.remove("active"));
+
+      detail.innerHTML = `
+        <h2>${p.idx}. ${p.title}</h2>
+        <p class="meta">Track: Political Economy | Period: ${p.years} | Anchor year: ${p.year}</p>
+        <p>${p.summary}</p>
+      `;
+    }
+
+    function showReserveDetail(era) {
+      const p = reservePhases.find((item) => item.era === era);
+      if (!p) return;
+      reservePoints.forEach((pt) => pt.classList.toggle("active", Number(pt.dataset.era) === era));
+      points.forEach((pt) => pt.classList.remove("active"));
+
+      detail.innerHTML = `
+        <h2>${p.era}. ${p.title}</h2>
+        <p class="meta">Track: Reserve Currency Evolution | Dates: ${p.dates} | Anchor year: ${p.year}</p>
+        <p>${p.description}</p>
+      `;
+    }
+
+    drawAxisTicks();
+    drawPoints();
+    applyResponsiveLayout();
+    window.addEventListener("resize", applyResponsiveLayout);
+    showDetail(1);
+  </script>
+</body>
+</html>
