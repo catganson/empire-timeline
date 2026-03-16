@@ -469,6 +469,94 @@
       width: 100%;
     }
 
+    .flowchart-wrap {
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .flowchart-wrap > summary {
+      list-style: none;
+      cursor: pointer;
+      font-size: 0.88rem;
+      color: #d8ebff;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .flowchart-wrap > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .flowchart-wrap > summary::before {
+      content: "▸";
+      color: #9fc3e8;
+      transition: transform 120ms ease;
+    }
+
+    .flowchart-wrap[open] > summary::before {
+      transform: rotate(90deg);
+    }
+
+    .flowchart-body {
+      margin: 10px auto 0;
+      max-width: 860px;
+      text-align: center;
+      color: #d7e8fa;
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+
+    .flowchart-title {
+      margin: 0;
+      font-size: 0.88rem;
+      color: #e7f2ff;
+      letter-spacing: 0.01em;
+    }
+
+    .flowchart-subtitle {
+      margin: 4px 0 10px;
+      color: #bdd7ef;
+      font-size: 0.76rem;
+    }
+
+    .flowchart-section {
+      margin-top: 14px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(154, 189, 223, 0.2);
+    }
+
+    .flowchart-section h5 {
+      margin: 0 0 8px;
+      font-size: 0.78rem;
+      color: #cfe3f8;
+      letter-spacing: 0.01em;
+      font-weight: 600;
+    }
+
+    .flow-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .flow-box {
+      max-width: 700px;
+      padding: 8px 10px;
+      border: 1px solid rgba(163, 197, 230, 0.36);
+      border-radius: 8px;
+      background: rgba(15, 35, 60, 0.35);
+      text-align: center;
+    }
+
+    .flow-arrow {
+      color: #adcceb;
+      font-size: 0.9rem;
+      line-height: 1;
+    }
+
     .foot {
       margin-top: 92px;
       color: #c1d8ef;
@@ -989,6 +1077,77 @@
       { year: 2020, value: -2.9 },
       { year: 2024, value: -3.2 }
     ];
+
+    const reserveEra4FlowchartHtml = `
+      <div class="flowchart-body">
+        <p class="flowchart-title">GLOBAL CREDIT STRUCTURE AFTER WWI</p>
+        <p class="flowchart-subtitle">(Domestic Stock Bubble + International Debt System)</p>
+
+        <section class="flowchart-section">
+          <h5>I. INTERNATIONAL FINANCIAL STRUCTURE (POST WWI)</h5>
+          <div class="flow-stack">
+            <div class="flow-box">World War I financing system<br>United States becomes major creditor<br>Allies borrow heavily from U.S. banks</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">INTER-ALLY DEBT SYSTEM<br>Germany owes reparations to Allies<br>Allies owe war debts to the U.S.<br>Germany borrows from U.S. banks to pay reparations</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">GLOBAL CIRCULAR DEBT FLOW<br>U.S. loans → Germany<br>Germany → reparations → Britain & France<br>Britain & France → war debt payments → U.S.<br>System depends on continuous new credit</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">U.S. CREDIT EXPANSION DURING 1920s<br>American banks export capital abroad<br>Credit expansion supports international loans and domestic speculation</div>
+          </div>
+        </section>
+
+        <section class="flowchart-section">
+          <h5>II. DOMESTIC STOCK MARKET CREDIT SYSTEM</h5>
+          <div class="flow-stack">
+            <div class="flow-box">Cultural stock speculation boom<br>Stocks widely purchased on margin<br>Investors often put down ~10% cash</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">INVESTOR (BUYER LEVEL)<br>Investor buys $100 of stock<br>Investor cash = $10<br>Margin loan from broker = $90<br>Leverage magnifies gains while prices rise</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">BROKER LEVEL<br>Broker lends $90 to investor<br>Broker holds stock as collateral<br>Broker earns interest on margin loans<br>Broker often borrows funds from banks</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">COMMERCIAL BANK LEVEL<br>Banks lend money to brokers<br>Banks finance margin speculation<br>Banking system exposed to stock prices</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">STOCK MARKET EXPANSION<br>Rising prices reinforce borrowing<br>More margin loans → more stock buying<br>Credit expansion fuels asset bubble</div>
+          </div>
+        </section>
+
+        <section class="flowchart-section">
+          <h5>III. CRISIS TRIGGER</h5>
+          <div class="flow-stack">
+            <div class="flow-box">U.S. lending slows late 1920s<br>Global credit expansion weakens<br>International debt system destabilizes</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">INITIAL STOCK PRICE DECLINE<br>Stock prices begin falling<br>Investor equity collapses quickly<br>Collateral no longer covers loans</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">MARGIN CALLS<br>Brokers demand additional collateral<br>Most investors cannot provide cash<br>Brokers liquidate stock holdings</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">FORCED SELLING CASCADE<br>Large waves of forced sales<br>Sellers overwhelm available buyers<br>Prices fall further<br>Lower prices trigger new margin calls</div>
+          </div>
+        </section>
+
+        <section class="flowchart-section">
+          <h5>IV. FINANCIAL SYSTEM COLLAPSE</h5>
+          <div class="flow-stack">
+            <div class="flow-box">INVESTOR IMPACT<br>Investors lose equity<br>Many accounts wiped out<br>Some still owe outstanding debt</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">BROKER IMPACT<br>Collateral sales fail to cover loans<br>Brokerages absorb losses<br>Some brokerage firms collapse</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">BANKING IMPACT<br>Brokers cannot fully repay bank loans<br>Banks suffer major losses<br>Depositors panic and withdraw funds<br>Bank runs begin</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">GLOBAL DEBT SYSTEM BREAKDOWN<br>U.S. credit contraction stops new loans<br>Germany cannot borrow to pay reparations<br>Allies cannot repay U.S. war debts<br>International financial system freezes</div>
+          </div>
+        </section>
+
+        <section class="flowchart-section">
+          <h5>V. ECONOMIC DEPRESSION</h5>
+          <div class="flow-stack">
+            <div class="flow-box">CREDIT SYSTEM COLLAPSE<br>Bank failures shrink money supply<br>Lending collapses<br>Businesses lose access to credit</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">REAL ECONOMY<br>Industrial production falls<br>Mass unemployment<br>Consumer demand collapses<br>Global trade contracts</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-box">GREAT DEPRESSION<br>Banking collapse<br>Deflation and debt liquidation<br>Global economic contraction</div>
+          </div>
+        </section>
+      </div>`;
 
     const foreignTreasuryPctAnchorData = [
       { year: 1975, value: 5.5 },
@@ -1756,11 +1915,20 @@
       if (!p) return;
       reservePoints.forEach((pt) => pt.classList.toggle("active", Number(pt.dataset.era) === era));
       points.forEach((pt) => pt.classList.remove("active"));
+      const flowchartBlock = era === 4
+        ? `
+        <details class="flowchart-wrap">
+          <summary>Flowchart</summary>
+          ${reserveEra4FlowchartHtml}
+        </details>
+      `
+        : "";
 
       detail.innerHTML = `
         <h2>${p.era}. ${p.title}</h2>
         <p class="meta">Track: Reserve Currency Evolution | Dates: ${p.dates} | Anchor year: ${p.year}</p>
         <p>${p.description}</p>
+        ${flowchartBlock}
       `;
     }
 
