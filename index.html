@@ -39,14 +39,14 @@
       width: 100%;
       max-width: none;
       margin: 0;
-      padding: 28px clamp(12px, 3.2vw, 40px) 34px;
+      padding: 56px clamp(12px, 3.2vw, 40px) 34px;
       display: flex;
       flex-direction: column;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(1.1rem, 2vw, 1.65rem);
+      font-size: clamp(1.45rem, 2.8vw, 2.35rem);
       font-weight: 500;
       line-height: 1.15;
       letter-spacing: 0.01em;
@@ -57,7 +57,7 @@
       margin: 10px 0 0;
       color: var(--muted);
       width: 100%;
-      font-size: 1.04rem;
+      font-size: clamp(0.95rem, 1.7vw, 1.32rem);
       font-weight: 500;
       letter-spacing: 0.01em;
       text-align: center;
@@ -111,6 +111,42 @@
       font-size: 0.68rem;
       letter-spacing: 0.01em;
       text-align: center;
+    }
+
+    .track-toggle {
+      margin: 34px auto 2px;
+      display: inline-flex;
+      gap: 6px;
+      align-self: center;
+      background: rgba(8, 23, 41, 0.62);
+      border: 1px solid rgba(145, 178, 212, 0.28);
+      border-radius: 999px;
+      padding: 4px;
+    }
+
+    .track-toggle button {
+      border: 0;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 0.64rem;
+      color: #b9d4ef;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .track-toggle button.active {
+      background: rgba(162, 202, 240, 0.2);
+      color: #eef6ff;
+    }
+
+    .track-description {
+      margin: 16px auto 0;
+      max-width: 700px;
+      color: #b9d3ed;
+      font-size: 0.74rem;
+      line-height: 1.35;
+      text-align: center;
+      padding: 0 10px;
     }
 
     .year-tick {
@@ -353,7 +389,7 @@
 
     .main-base-path {
       fill: none;
-      stroke: #c66f14;
+      stroke: #b11f1f;
       stroke-width: 2.3;
       stroke-linecap: round;
       opacity: 0.95;
@@ -491,14 +527,19 @@
       <h3>Philosophical Influences</h3>
       <p class="influence-list">Alexandre Kojève • Carl Schmitt</p>
     </div>
+    <div class="track-toggle" role="group" aria-label="Narrative track toggle">
+      <button id="togglePolitical" type="button" class="active" aria-pressed="true">Political Economy</button>
+      <button id="toggleReserve" type="button" aria-pressed="false">Reserve System</button>
+    </div>
+    <p id="trackDescription" class="track-description"></p>
 
     <section class="chart" aria-label="Interactive timeline chart">
       <div class="chart-inner" id="chartInner">
         <svg class="trend" viewBox="0 0 1200 260" preserveAspectRatio="none" aria-hidden="true">
           <defs>
             <linearGradient id="mainLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#ffd9a8"></stop>
-              <stop offset="100%" stop-color="#b65300"></stop>
+              <stop offset="0%" stop-color="#ffb4b4"></stop>
+              <stop offset="100%" stop-color="#b31919"></stop>
             </linearGradient>
             <linearGradient id="reserveLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stop-color="#d2f2cd"></stop>
@@ -826,6 +867,9 @@
     const quantNiipHitPath = document.getElementById("quantNiipHitPath");
     const quantTreasuryHitPath = document.getElementById("quantTreasuryHitPath");
     const eventMarkerGroup = document.getElementById("eventMarkerGroup");
+    const togglePolitical = document.getElementById("togglePolitical");
+    const toggleReserve = document.getElementById("toggleReserve");
+    const trackDescription = document.getElementById("trackDescription");
 
     const minYear = 1860;
     const maxYear = 2065;
@@ -859,6 +903,14 @@
     let quantHoverLabel = null;
     let quantSeriesTooltip = null;
     let marker1971Static = null;
+    let activeNarrativeTrack = "political";
+    let lastPoliticalIdx = 1;
+    let lastReserveEra = 1;
+
+    const trackDescriptions = {
+      political: "Institutional evolution of the American state and economy—from industrial capitalism and creditor power to a financialized, managerial system—along with possible future transformations of the structure.",
+      reserve: "Evolution of the international monetary order from the gold standard and Bretton Woods to the post-1971 dollar–Treasury system that finances U.S. deficits, with speculation on potential future reserve arrangements."
+    };
 
     const quantAnnotationsConfig = [
       { year: 1916, label: "1914-1918 U.S. creditor pivot" },
@@ -1329,7 +1381,7 @@
       });
       if (marker1971Static) {
         marker1971Static.style.left = `${toX(1971)}px`;
-        marker1971Static.style.top = `${Math.max(8, quantTopY - 18)}px`;
+        marker1971Static.style.top = `${Math.max(8, quantTopY - 28)}px`;
       }
       hideQuantEventTooltip();
     }
@@ -1348,7 +1400,7 @@
         decadeGridGroup.appendChild(line);
       });
 
-      const markerTopY = 10;
+      const markerTopY = quantTopY;
       const markerX = toX(1971);
       marker1971Line.setAttribute("x1", markerX.toFixed(2));
       marker1971Line.setAttribute("x2", markerX.toFixed(2));
@@ -1477,8 +1529,9 @@
       chartH = Math.max(chartInner.clientHeight, 180);
       padX = Math.max(22, Math.min(54, Math.round(chartW * 0.045)));
       usableW = Math.max(1, chartW - padX * 2);
-      mainY = Math.round(chartH * 0.22);
-      reserveY = Math.round(chartH * 0.40);
+      const sharedNarrativeY = Math.round(chartH * 0.31);
+      mainY = sharedNarrativeY;
+      reserveY = sharedNarrativeY;
       quantTopY = Math.round(chartH * 0.60);
       quantBottomY = Math.round(chartH * 0.88);
       decadeY = Math.round(chartH * 0.93);
@@ -1556,6 +1609,7 @@
     function applyResponsiveLayout() {
       computeLayout();
       const isNarrow = window.innerWidth < 760;
+      const isPoliticalActive = activeNarrativeTrack === "political";
       ensureQuantDecorations();
       renderDecadeGridAndMarker();
       const mainLine = `M${toX(minYear).toFixed(2)} ${mainY.toFixed(2)} L${toX(maxYear).toFixed(2)} ${mainY.toFixed(2)}`;
@@ -1564,6 +1618,10 @@
       const reserveLine = `M${toX(minYear).toFixed(2)} ${reserveY.toFixed(2)} L${toX(maxYear).toFixed(2)} ${reserveY.toFixed(2)}`;
       reserveBasePath.setAttribute("d", reserveLine);
       reservePath.setAttribute("d", reserveLine);
+      mainBasePath.style.opacity = isPoliticalActive ? "0.95" : "0";
+      trendPath.style.opacity = isPoliticalActive ? "0.98" : "0";
+      reserveBasePath.style.opacity = isPoliticalActive ? "0" : "0.95";
+      reservePath.style.opacity = isPoliticalActive ? "0" : "0.96";
       const decadeLine = `M${toX(1860).toFixed(2)} ${decadeY.toFixed(2)} L${toX(2060).toFixed(2)} ${decadeY.toFixed(2)}`;
       decadePath.setAttribute("d", decadeLine);
 
@@ -1583,15 +1641,17 @@
         const year = Number(el.dataset.year);
         el.style.left = `${toX(year)}px`;
         el.style.top = `${mainY}px`;
+        el.style.display = isPoliticalActive ? "block" : "none";
         const t = Math.min(1, Math.max(0, (year - minYear) / (maxYear - minYear)));
-        el.style.background = mixColor("#f6c78b", "#a34e00", t);
-        el.style.boxShadow = `0 1px 10px ${mixColor("#f6c78b", "#a34e00", Math.min(1, t + 0.08))}55`;
+        el.style.background = mixColor("#ffb3b3", "#b31919", t);
+        el.style.boxShadow = `0 1px 10px ${mixColor("#ffb3b3", "#b31919", Math.min(1, t + 0.08))}55`;
       });
 
       reservePoints.forEach((el) => {
         const year = Number(el.dataset.year);
         el.style.left = `${toX(year)}px`;
         el.style.top = `${reserveY}px`;
+        el.style.display = isPoliticalActive ? "none" : "block";
         const t = Math.min(1, Math.max(0, (year - minYear) / (maxYear - minYear)));
         el.style.background = mixColor("#bfe8b8", "#2f7a2b", t);
         el.style.boxShadow = `0 1px 9px ${mixColor("#bfe8b8", "#2f7a2b", Math.min(1, t + 0.08))}66`;
@@ -1628,6 +1688,8 @@
         node.stem.style.height = `${len}px`;
         node.label.style.left = `${x}px`;
         node.label.style.top = `${mainY - len - 16}px`;
+        node.stem.style.display = isPoliticalActive ? "block" : "none";
+        node.label.style.display = isPoliticalActive ? "block" : "none";
       });
 
       const sortedReserveAnchors = reserveAnchors
@@ -1648,16 +1710,20 @@
       sortedReserveAnchors.forEach((a) => {
         const node = reserveAnchors[a.i];
         const x = a.x;
-        const len = 14 + a.tier * 8;
+        const extra = a.year === 1971 ? 16 : 0;
+        const len = 14 + a.tier * 8 + extra;
         node.stem.style.left = `${x}px`;
         node.stem.style.top = `${reserveY + 1}px`;
         node.stem.style.height = `${len}px`;
         node.label.style.left = `${x}px`;
         node.label.style.top = `${reserveY + len + 4}px`;
+        node.stem.style.display = isPoliticalActive ? "none" : "block";
+        node.label.style.display = isPoliticalActive ? "none" : "block";
       });
     }
 
     function showDetail(idx) {
+      lastPoliticalIdx = idx;
       const p = phases.find((item) => item.idx === idx);
       if (!p) return;
       points.forEach((pt) => pt.classList.toggle("active", Number(pt.dataset.index) === idx));
@@ -1671,6 +1737,7 @@
     }
 
     function showReserveDetail(era) {
+      lastReserveEra = era;
       const p = reservePhases.find((item) => item.era === era);
       if (!p) return;
       reservePoints.forEach((pt) => pt.classList.toggle("active", Number(pt.dataset.era) === era));
@@ -1681,6 +1748,22 @@
         <p class="meta">Track: Reserve Currency Evolution | Dates: ${p.dates} | Anchor year: ${p.year}</p>
         <p>${p.description}</p>
       `;
+    }
+
+    function setActiveNarrativeTrack(track) {
+      activeNarrativeTrack = track === "reserve" ? "reserve" : "political";
+      const politicalActive = activeNarrativeTrack === "political";
+      togglePolitical.classList.toggle("active", politicalActive);
+      toggleReserve.classList.toggle("active", !politicalActive);
+      togglePolitical.setAttribute("aria-pressed", politicalActive ? "true" : "false");
+      toggleReserve.setAttribute("aria-pressed", politicalActive ? "false" : "true");
+      trackDescription.textContent = trackDescriptions[activeNarrativeTrack];
+      applyResponsiveLayout();
+      if (politicalActive) {
+        showDetail(lastPoliticalIdx);
+      } else {
+        showReserveDetail(lastReserveEra);
+      }
     }
 
     drawAxisTicks();
@@ -1694,12 +1777,14 @@
     quantTreasuryHitPath.addEventListener("mouseenter", (event) => showSeriesTooltip("treasury", event));
     quantTreasuryHitPath.addEventListener("mousemove", moveSeriesTooltip);
     quantTreasuryHitPath.addEventListener("mouseleave", hideSeriesTooltip);
+    togglePolitical.addEventListener("click", () => setActiveNarrativeTrack("political"));
+    toggleReserve.addEventListener("click", () => setActiveNarrativeTrack("reserve"));
     applyResponsiveLayout();
     window.addEventListener("resize", applyResponsiveLayout);
     loadQuantitativeData().then(() => {
       applyResponsiveLayout();
     });
-    showDetail(1);
+    setActiveNarrativeTrack("political");
   </script>
 </body>
 </html>
