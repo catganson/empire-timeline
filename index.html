@@ -101,7 +101,16 @@
       position: relative;
       width: 100%;
       min-width: 0;
-      height: 350px;
+      height: 430px;
+    }
+
+    .chart-scroll-hint {
+      display: none;
+      margin: 4px 0 0;
+      color: #c7ddf3;
+      font-size: 0.68rem;
+      letter-spacing: 0.01em;
+      text-align: center;
     }
 
     .year-tick {
@@ -172,6 +181,168 @@
       opacity: 0.8;
     }
 
+    .decade-grid-line {
+      stroke: rgba(177, 206, 237, 0.16);
+      stroke-width: 1;
+      shape-rendering: crispEdges;
+    }
+
+    .decade-grid-line.major {
+      stroke: rgba(177, 206, 237, 0.24);
+    }
+
+    .marker-1971-line {
+      stroke: rgba(255, 227, 170, 0.95);
+      stroke-width: 2.2;
+      shape-rendering: crispEdges;
+    }
+
+    .quant-panel-bg {
+      fill: rgba(11, 33, 58, 0.45);
+      stroke: rgba(145, 178, 212, 0.22);
+      stroke-width: 1;
+    }
+
+    .quant-axis-line {
+      stroke: rgba(182, 211, 240, 0.45);
+      stroke-width: 1;
+      shape-rendering: crispEdges;
+    }
+
+    .quant-zero-line {
+      stroke: rgba(255, 210, 133, 0.78);
+      stroke-width: 1.2;
+      stroke-dasharray: 3 3;
+    }
+
+    .quant-ca-path {
+      fill: none;
+      stroke: #f6c78b;
+      stroke-width: 2.4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .quant-niip-path {
+      fill: none;
+      stroke: #9ac8ff;
+      stroke-width: 1.8;
+      stroke-dasharray: 5 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.95;
+    }
+
+    .quant-treasury-path {
+      fill: none;
+      stroke: #79b8a6;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.96;
+    }
+
+    .quant-hit-path {
+      fill: none;
+      stroke: transparent;
+      stroke-width: 14;
+      pointer-events: stroke;
+      cursor: pointer;
+    }
+
+    .axis-tick {
+      position: absolute;
+      font-size: 0.61rem;
+      color: #aac8e5;
+      transform: translateY(-50%);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .axis-tick.right {
+      transform: translate(-100%, -50%);
+      text-align: right;
+    }
+
+    .axis-title {
+      position: absolute;
+      font-size: 0.59rem;
+      color: #c7def4;
+      letter-spacing: 0.01em;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .axis-title.interactive {
+      pointer-events: auto;
+      cursor: help;
+    }
+
+    .quant-event-line {
+      stroke: rgba(255, 227, 170, 0.72);
+      stroke-width: 1.2;
+      shape-rendering: crispEdges;
+    }
+
+    .quant-event-hit {
+      position: absolute;
+      width: 14px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      transform: translateX(-50%);
+      cursor: help;
+      outline: none;
+    }
+
+    .quant-hover-label {
+      position: absolute;
+      z-index: 20;
+      max-width: 260px;
+      background: rgba(10, 26, 46, 0.95);
+      border: 1px solid rgba(166, 201, 236, 0.52);
+      border-radius: 4px;
+      color: #d8ebff;
+      font-size: 0.64rem;
+      line-height: 1.3;
+      padding: 4px 6px;
+      pointer-events: none;
+      white-space: nowrap;
+      display: none;
+    }
+
+    .quant-series-tooltip {
+      position: absolute;
+      z-index: 22;
+      max-width: 320px;
+      background: rgba(8, 22, 39, 0.96);
+      border: 1px solid rgba(170, 205, 240, 0.56);
+      border-radius: 4px;
+      color: #ddf0ff;
+      font-size: 0.62rem;
+      line-height: 1.35;
+      padding: 6px 7px;
+      pointer-events: none;
+      white-space: normal;
+      display: none;
+    }
+
+    .marker-1971-static {
+      position: absolute;
+      z-index: 18;
+      transform: translateX(-50%);
+      font-size: 0.62rem;
+      font-weight: 600;
+      color: #ffe9bf;
+      background: rgba(20, 41, 66, 0.82);
+      border: 1px solid rgba(255, 232, 182, 0.42);
+      border-radius: 3px;
+      padding: 1px 5px;
+      white-space: nowrap;
+      pointer-events: none;
+      text-shadow: 0 1px 2px rgba(6, 12, 20, 0.55);
+    }
+
     .reserve-path {
       fill: none;
       stroke: url(#reserveLineGrad);
@@ -222,18 +393,6 @@
       box-shadow: 0 1px 9px rgba(144, 213, 138, 0.35);
     }
 
-    .track-label {
-      position: absolute;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 0.66rem;
-      color: #d2e5f9;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      opacity: 0.9;
-      pointer-events: none;
-    }
-
     .detail {
       margin: 14px auto 0;
       width: min(940px, 92%);
@@ -273,17 +432,52 @@
     }
 
     @media (max-width: 760px) {
+      .wrap {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+
       .chart {
-        padding: 14px 2px 12px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        padding: 14px 0 12px;
       }
 
       .chart-inner {
-        height: 300px;
+        width: max(1700px, 280vw);
+        height: 400px;
+      }
+
+      .point {
+        width: 11px;
+        height: 11px;
+        border-width: 1.6px;
+      }
+
+      .point:hover,
+      .point:focus-visible,
+      .point.active {
+        transform: translate(-50%, -50%) scale(1.22);
       }
 
       .detail {
         min-height: 0;
+        width: 100%;
       }
+
+      .foot {
+        margin-top: 48px;
+      }
+
+      .chart-scroll-hint {
+        display: block;
+      }
+
+      .quant-hover-label {
+        font-size: 0.58rem;
+      }
+
     }
   </style>
 </head>
@@ -311,16 +505,28 @@
               <stop offset="100%" stop-color="#2f8a2b"></stop>
             </linearGradient>
           </defs>
+          <g id="decadeGridGroup"></g>
+          <g id="eventMarkerGroup"></g>
+          <line id="marker1971Line" class="marker-1971-line" x1="0" y1="0" x2="0" y2="0"></line>
+          <rect id="quantPanelBg" class="quant-panel-bg" x="0" y="0" width="0" height="0"></rect>
+          <line id="quantLeftAxis" class="quant-axis-line" x1="0" y1="0" x2="0" y2="0"></line>
+          <line id="quantRightAxis" class="quant-axis-line" x1="0" y1="0" x2="0" y2="0"></line>
+          <line id="quantZeroLine" class="quant-zero-line" x1="0" y1="0" x2="0" y2="0"></line>
+          <path id="quantCaPath" class="quant-ca-path" d=""></path>
+          <path id="quantNiipPath" class="quant-niip-path" d=""></path>
+          <path id="quantTreasuryPath" class="quant-treasury-path" d=""></path>
+          <path id="quantCaHitPath" class="quant-hit-path" d=""></path>
+          <path id="quantNiipHitPath" class="quant-hit-path" d=""></path>
+          <path id="quantTreasuryHitPath" class="quant-hit-path" d=""></path>
           <path id="mainBasePath" class="main-base-path" d=""></path>
           <path id="trendPath" class="trend-path" d=""></path>
           <path id="reserveBasePath" class="reserve-base-path" d=""></path>
           <path id="reservePath" class="reserve-path" d=""></path>
           <path id="decadePath" class="decade-path" d=""></path>
         </svg>
-        <div class="track-label" id="mainTrackLabel">Political Economy Arc</div>
-        <div class="track-label" id="reserveTrackLabel">Reserve Currency Evolution</div>
       </div>
     </section>
+    <p class="chart-scroll-hint">Swipe horizontally to explore the full timeline.</p>
 
     <article class="detail" id="detail" aria-live="polite"></article>
 
@@ -545,7 +751,7 @@
         reserveRegime: "Treasury bond reserve system",
         usPosition: "Structural balance-of-payments deficits",
         mechanism: "Foreign central banks recycle dollar reserves into U.S. Treasury securities",
-        description: "The United States begins running persistent trade and balance-of-payments deficits. Foreign governments accumulate dollars and reinvest them into Treasury bonds, effectively financing American deficits and sustaining the global dollar system.",
+        description: "The United States begins running persistent trade and balance-of-payments deficits. Foreign governments accumulate dollars and reinvest them into Treasury bonds, effectively financing American deficits and sustaining the global dollar system. As a result, the U.S. Net International Investment Position turns increasingly negative. Unlike a normal debtor country, however, this does not necessarily signal weakness: because the United States issues the global reserve currency, its liabilities function as the world’s preferred reserve assets, allowing a negative NIIP to coexist with continued financial and geopolitical power.",
         year: 1981
       },
       {
@@ -607,8 +813,19 @@
     const reserveBasePath = document.getElementById("reserveBasePath");
     const reservePath = document.getElementById("reservePath");
     const decadePath = document.getElementById("decadePath");
-    const mainTrackLabel = document.getElementById("mainTrackLabel");
-    const reserveTrackLabel = document.getElementById("reserveTrackLabel");
+    const decadeGridGroup = document.getElementById("decadeGridGroup");
+    const marker1971Line = document.getElementById("marker1971Line");
+    const quantPanelBg = document.getElementById("quantPanelBg");
+    const quantLeftAxis = document.getElementById("quantLeftAxis");
+    const quantRightAxis = document.getElementById("quantRightAxis");
+    const quantZeroLine = document.getElementById("quantZeroLine");
+    const quantCaPath = document.getElementById("quantCaPath");
+    const quantNiipPath = document.getElementById("quantNiipPath");
+    const quantTreasuryPath = document.getElementById("quantTreasuryPath");
+    const quantCaHitPath = document.getElementById("quantCaHitPath");
+    const quantNiipHitPath = document.getElementById("quantNiipHitPath");
+    const quantTreasuryHitPath = document.getElementById("quantTreasuryHitPath");
+    const eventMarkerGroup = document.getElementById("eventMarkerGroup");
 
     const minYear = 1860;
     const maxYear = 2065;
@@ -620,6 +837,8 @@
     let usableW = 0;
     let mainY = 0;
     let reserveY = 0;
+    let quantTopY = 0;
+    let quantBottomY = 0;
     let decadeY = 0;
 
     const toX = (year) => padX + ((year - minYear) / (maxYear - minYear)) * usableW;
@@ -629,6 +848,93 @@
     const ticks = [];
     const anchors = [];
     const reserveAnchors = [];
+    const leftAxisTicks = [];
+    const rightAxisTicks = [];
+    const quantEventTargets = [];
+    const axisTitles = {};
+    let quantSeries = { ca: [], niip: [], treasury: [] };
+    let quantScales = { min: -120, max: 40, logConstant: 10 };
+    let quantUsesFallback = false;
+    let quantModeLabel = "Fallback data mode";
+    let quantHoverLabel = null;
+    let quantSeriesTooltip = null;
+    let marker1971Static = null;
+
+    const quantAnnotationsConfig = [
+      { year: 1916, label: "1914-1918 U.S. creditor pivot" },
+      { year: 1945, label: "1944/45 Bretton Woods" },
+      { year: 1971, label: "1971 gold window closed" },
+      { year: 1985, label: "1980s Treasury recycling matures" },
+      { year: 2008, label: "2008 Fed global liquidity regime" },
+      { year: 2022, label: "2020s tech/defense finance convergence" }
+    ];
+
+    const dataEndpoints = {
+      currentAccountLocal: "data/current-account.csv",
+      gdpLocal: "data/gdp.csv",
+      niipLocal: "data/niip.csv",
+      treasuryLocal: "data/foreign-treasury-holdings.csv",
+      currentAccountRemote: "https://fred.stlouisfed.org/graph/fredgraph.csv?id=A124RC1A027NBEA",
+      gdpRemote: "https://fred.stlouisfed.org/graph/fredgraph.csv?id=GDPA",
+      niipRemote: "https://fred.stlouisfed.org/graph/fredgraph.csv?id=IIPUSNETIA",
+      treasuryRemote: "https://fred.stlouisfed.org/graph/fredgraph.csv?id=ROWTSEA027N"
+    };
+
+    const niipAnchorData = [
+      { year: 1976, niipUsdBillions: 60 },
+      { year: 1980, niipUsdBillions: 140 },
+      { year: 1985, niipUsdBillions: 110 },
+      { year: 1990, niipUsdBillions: -300 },
+      { year: 1995, niipUsdBillions: -500 },
+      { year: 2000, niipUsdBillions: -1800 },
+      { year: 2005, niipUsdBillions: -2400 },
+      { year: 2010, niipUsdBillions: -2500 },
+      { year: 2015, niipUsdBillions: -7600 },
+      { year: 2020, niipUsdBillions: -14000 },
+      { year: 2024, niipUsdBillions: -26539 }
+    ];
+
+    const gdpAnchorData = [
+      { year: 1976, gdpUsdBillions: 1877 },
+      { year: 1980, gdpUsdBillions: 2862 },
+      { year: 1985, gdpUsdBillions: 4346 },
+      { year: 1990, gdpUsdBillions: 5963 },
+      { year: 1995, gdpUsdBillions: 7664 },
+      { year: 2000, gdpUsdBillions: 10252 },
+      { year: 2005, gdpUsdBillions: 13039 },
+      { year: 2010, gdpUsdBillions: 14992 },
+      { year: 2015, gdpUsdBillions: 18238 },
+      { year: 2020, gdpUsdBillions: 21322 },
+      { year: 2024, gdpUsdBillions: 29184 }
+    ];
+
+    const currentAccountPctAnchorData = [
+      { year: 1880, value: 1.2 },
+      { year: 1917, value: 4.2 },
+      { year: 1945, value: 1.8 },
+      { year: 1955, value: 1.0 },
+      { year: 1965, value: 0.3 },
+      { year: 1975, value: 0.2 },
+      { year: 1985, value: -2.8 },
+      { year: 1995, value: -1.5 },
+      { year: 2000, value: -3.7 },
+      { year: 2005, value: -5.7 },
+      { year: 2010, value: -3.0 },
+      { year: 2015, value: -2.3 },
+      { year: 2020, value: -2.9 },
+      { year: 2024, value: -3.2 }
+    ];
+
+    const foreignTreasuryPctAnchorData = [
+      { year: 1975, value: 5.5 },
+      { year: 1985, value: 8.2 },
+      { year: 1995, value: 12.8 },
+      { year: 2005, value: 17.2 },
+      { year: 2010, value: 19.6 },
+      { year: 2015, value: 28.4 },
+      { year: 2020, value: 33.0 },
+      { year: 2024, value: 30.5 }
+    ];
 
     function hexToRgb(hex) {
       const clean = hex.replace("#", "");
@@ -648,14 +954,534 @@
       return `rgb(${r}, ${g}, ${bch})`;
     }
 
+    function parseFredCsv(csvText) {
+      const rows = csvText.trim().split("\n");
+      if (rows.length < 2) return new Map();
+      const values = new Map();
+      for (let i = 1; i < rows.length; i += 1) {
+        const [dateRaw, valueRaw] = rows[i].split(",");
+        if (!dateRaw || !valueRaw || valueRaw === ".") continue;
+        const year = Number.parseInt(dateRaw.slice(0, 4), 10);
+        const value = Number(valueRaw);
+        if (Number.isFinite(year) && Number.isFinite(value)) {
+          values.set(year, value);
+        }
+      }
+      return values;
+    }
+
+    function toPointsByYear(yearMap, valueFn) {
+      return Array.from(yearMap.entries())
+        .map(([year, value]) => ({ year, value: valueFn(year, value) }))
+        .filter((p) => Number.isFinite(p.value) && p.year >= minYear && p.year <= maxYear)
+        .sort((a, b) => a.year - b.year);
+    }
+
+    function combinedExtent(series, fallbackMin, fallbackMax) {
+      if (!series.length) return { min: fallbackMin, max: fallbackMax };
+      let min = Infinity;
+      let max = -Infinity;
+      series.forEach((p) => {
+        if (p.value < min) min = p.value;
+        if (p.value > max) max = p.value;
+      });
+      min = Math.min(min, 0);
+      max = Math.max(max, 0);
+      const span = Math.max(1, max - min);
+      const pad = span * 0.14;
+      return { min: min - pad, max: max + pad };
+    }
+
+    function interpolateAnnualSeries(anchorData) {
+      const sorted = [...anchorData].sort((a, b) => a.year - b.year);
+      if (!sorted.length) return [];
+      const out = [];
+      for (let i = 0; i < sorted.length - 1; i += 1) {
+        const a = sorted[i];
+        const b = sorted[i + 1];
+        const span = Math.max(1, b.year - a.year);
+        for (let y = a.year; y < b.year; y += 1) {
+          const t = (y - a.year) / span;
+          out.push({ year: y, value: a.value + (b.value - a.value) * t });
+        }
+      }
+      out.push({ year: sorted[sorted.length - 1].year, value: sorted[sorted.length - 1].value });
+      return out.filter((p) => p.year >= minYear && p.year <= maxYear);
+    }
+
+    function buildSegmentedPath(points, yFn) {
+      if (!points.length) return "";
+      let d = "";
+      let prevYear = -Infinity;
+      points.forEach((p) => {
+        const cmd = p.year - prevYear > 1 ? "M" : "L";
+        d += `${cmd}${toX(p.year).toFixed(2)} ${yFn(p.value).toFixed(2)} `;
+        prevYear = p.year;
+      });
+      return d.trim();
+    }
+
+    function symlog(value, c = 10) {
+      if (value === 0) return 0;
+      const sign = value < 0 ? -1 : 1;
+      return sign * Math.log1p(Math.abs(value) / c);
+    }
+
+    function quantYForValue(value) {
+      const minScaled = symlog(quantScales.min, quantScales.logConstant);
+      const maxScaled = symlog(quantScales.max, quantScales.logConstant);
+      const valueScaled = symlog(value, quantScales.logConstant);
+      const range = Math.max(0.001, maxScaled - minScaled);
+      const t = (valueScaled - minScaled) / range;
+      return quantBottomY - t * (quantBottomY - quantTopY);
+    }
+
+    function quantYForCurrentAccount(value) {
+      return quantYForValue(value);
+    }
+
+    function quantYForNiip(value) {
+      return quantYForValue(value);
+    }
+
+    function quantYForTreasury(value) {
+      return quantYForValue(value);
+    }
+
+    function buildTicks(min, max, count) {
+      const ticks = [];
+      const step = (max - min) / (count - 1);
+      for (let i = 0; i < count; i += 1) {
+        ticks.push(min + i * step);
+      }
+      return ticks;
+    }
+
+    function buildSymlogTicks(min, max) {
+      const candidates = [-150, -120, -100, -80, -60, -40, -20, -10, -5, 0, 5, 10, 20, 30, 40, 60];
+      const ticks = candidates.filter((v) => v >= min && v <= max);
+      if (!ticks.includes(0) && min < 0 && max > 0) ticks.push(0);
+      ticks.sort((a, b) => a - b);
+      if (ticks.length >= 5) {
+        const stride = Math.ceil(ticks.length / 5);
+        const sampled = ticks.filter((_, idx) => idx % stride === 0);
+        if (!sampled.includes(ticks[ticks.length - 1])) sampled.push(ticks[ticks.length - 1]);
+        return sampled.slice(0, 6);
+      }
+      return ticks.length ? ticks : buildTicks(min, max, 5);
+    }
+
+    function formatSignedPercent(value) {
+      const rounded = Math.abs(value) >= 100 ? value.toFixed(0) : value.toFixed(1);
+      return `${value > 0 ? "+" : ""}${rounded}%`;
+    }
+
+    function ensureQuantDecorations() {
+      if (!axisTitles.left) {
+        const left = document.createElement("div");
+        left.className = "axis-title interactive";
+        left.textContent = "Current account (% GDP)";
+        left.tabIndex = 0;
+        chartInner.appendChild(left);
+        left.addEventListener("mouseenter", (event) => showAxisTitleTooltip("ca", event));
+        left.addEventListener("mousemove", moveSeriesTooltip);
+        left.addEventListener("mouseleave", hideSeriesTooltip);
+        left.addEventListener("focus", (event) => showAxisTitleTooltip("ca", event));
+        left.addEventListener("blur", hideSeriesTooltip);
+        axisTitles.left = left;
+      }
+
+      if (!axisTitles.right) {
+        const right = document.createElement("div");
+        right.className = "axis-title interactive";
+        right.textContent = "NIIP (% GDP)";
+        right.tabIndex = 0;
+        chartInner.appendChild(right);
+        right.addEventListener("mouseenter", (event) => showAxisTitleTooltip("niip", event));
+        right.addEventListener("mousemove", moveSeriesTooltip);
+        right.addEventListener("mouseleave", hideSeriesTooltip);
+        right.addEventListener("focus", (event) => showAxisTitleTooltip("niip", event));
+        right.addEventListener("blur", hideSeriesTooltip);
+        axisTitles.right = right;
+      }
+
+      if (!axisTitles.note) {
+        const note = document.createElement("div");
+        note.className = "axis-title";
+        note.style.opacity = "0.82";
+        chartInner.appendChild(note);
+        axisTitles.note = note;
+      }
+
+      if (!quantHoverLabel) {
+        quantHoverLabel = document.createElement("div");
+        quantHoverLabel.className = "quant-hover-label";
+        chartInner.appendChild(quantHoverLabel);
+      }
+
+      if (!quantSeriesTooltip) {
+        quantSeriesTooltip = document.createElement("div");
+        quantSeriesTooltip.className = "quant-series-tooltip";
+        chartInner.appendChild(quantSeriesTooltip);
+      }
+
+      if (!marker1971Static) {
+        marker1971Static = document.createElement("div");
+        marker1971Static.className = "marker-1971-static";
+        marker1971Static.textContent = "1971 gold window closed";
+        chartInner.appendChild(marker1971Static);
+      }
+
+      while (leftAxisTicks.length < 5) {
+        const tick = document.createElement("div");
+        tick.className = "axis-tick";
+        chartInner.appendChild(tick);
+        leftAxisTicks.push(tick);
+      }
+
+      while (rightAxisTicks.length < 5) {
+        const tick = document.createElement("div");
+        tick.className = "axis-tick right";
+        chartInner.appendChild(tick);
+        rightAxisTicks.push(tick);
+      }
+
+      if (!quantEventTargets.length) {
+        quantAnnotationsConfig.forEach((ann, idx) => {
+          if (ann.year === 1971) {
+            quantEventTargets.push(null);
+            return;
+          }
+          const target = document.createElement("button");
+          target.type = "button";
+          target.className = "quant-event-hit";
+          target.ariaLabel = ann.label;
+          const show = () => showQuantEventTooltip(idx);
+          target.addEventListener("mouseenter", show);
+          target.addEventListener("focus", show);
+          target.addEventListener("click", show);
+          target.addEventListener("mouseleave", hideQuantEventTooltip);
+          target.addEventListener("blur", hideQuantEventTooltip);
+          chartInner.appendChild(target);
+          quantEventTargets.push(target);
+        });
+      }
+    }
+
+    function showQuantEventTooltip(idx) {
+      if (!quantHoverLabel) return;
+      const ann = quantAnnotationsConfig[idx];
+      const x = toX(ann.year);
+      quantHoverLabel.textContent = ann.label;
+      quantHoverLabel.style.left = `${x + 8}px`;
+      quantHoverLabel.style.top = `${Math.max(8, quantTopY - 24)}px`;
+      quantHoverLabel.style.display = "block";
+    }
+
+    function hideQuantEventTooltip() {
+      if (!quantHoverLabel) return;
+      quantHoverLabel.style.display = "none";
+    }
+
+    function showSeriesTooltip(seriesKey, event) {
+      if (!quantSeriesTooltip) return;
+      if (seriesKey === "ca") {
+        quantSeriesTooltip.innerHTML = `
+          <strong>Current account (%GDP)</strong><br>
+          Net trade and income flows with the rest of the world, scaled by U.S. GDP.
+        `;
+      } else if (seriesKey === "treasury") {
+        quantSeriesTooltip.innerHTML = `
+          <strong>Foreign Treasury Holdings (%GDP)</strong><br>
+          Rest-of-world holdings of U.S. Treasury securities, scaled by U.S. GDP.
+        `;
+      } else {
+        quantSeriesTooltip.innerHTML = `
+          <strong>NIIP (%GDP)</strong><br>
+          U.S.-owned foreign assets minus foreign-owned U.S. assets, scaled by U.S. GDP.
+        `;
+      }
+      positionSeriesTooltipNearCursor(event);
+      quantSeriesTooltip.style.display = "block";
+    }
+
+    function moveSeriesTooltip(event) {
+      if (!quantSeriesTooltip || quantSeriesTooltip.style.display !== "block") return;
+      positionSeriesTooltipNearCursor(event);
+    }
+
+    function hideSeriesTooltip() {
+      if (!quantSeriesTooltip) return;
+      quantSeriesTooltip.style.display = "none";
+    }
+
+    function positionSeriesTooltipNearCursor(event) {
+      if (!quantSeriesTooltip) return;
+      const rect = chartInner.getBoundingClientRect();
+      const clientX = event.clientX ?? rect.left + 20;
+      const clientY = event.clientY ?? rect.top + 20;
+      const relX = clientX - rect.left;
+      const relY = clientY - rect.top;
+      quantSeriesTooltip.style.left = `${Math.min(chartW - 270, Math.max(8, relX + 12))}px`;
+      quantSeriesTooltip.style.top = `${Math.min(chartH - 40, Math.max(10, relY - 24))}px`;
+    }
+
+    function showAxisTitleTooltip(kind, event) {
+      if (!quantSeriesTooltip) return;
+      if (kind === "ca") {
+        quantSeriesTooltip.innerHTML = `
+          <strong>Current account (%GDP)</strong><br>
+          Annual flow: positive means surplus, negative means deficit.
+        `;
+      } else {
+        quantSeriesTooltip.innerHTML = `
+          <strong>NIIP (%GDP)</strong><br>
+          Stock position: positive means net creditor, negative means net debtor.
+        `;
+      }
+
+      positionSeriesTooltipNearCursor(event);
+      quantSeriesTooltip.style.display = "block";
+    }
+
+    function renderQuantAxes() {
+      const leftX = toX(minYear);
+      const rightX = toX(maxYear);
+      const sharedTicks = buildSymlogTicks(quantScales.min, quantScales.max);
+
+      quantPanelBg.setAttribute("x", leftX.toFixed(2));
+      quantPanelBg.setAttribute("y", quantTopY.toFixed(2));
+      quantPanelBg.setAttribute("width", (rightX - leftX).toFixed(2));
+      quantPanelBg.setAttribute("height", (quantBottomY - quantTopY).toFixed(2));
+
+      quantLeftAxis.setAttribute("x1", leftX.toFixed(2));
+      quantLeftAxis.setAttribute("x2", leftX.toFixed(2));
+      quantLeftAxis.setAttribute("y1", quantTopY.toFixed(2));
+      quantLeftAxis.setAttribute("y2", quantBottomY.toFixed(2));
+
+      quantRightAxis.setAttribute("x1", rightX.toFixed(2));
+      quantRightAxis.setAttribute("x2", rightX.toFixed(2));
+      quantRightAxis.setAttribute("y1", quantTopY.toFixed(2));
+      quantRightAxis.setAttribute("y2", quantBottomY.toFixed(2));
+
+      const zeroY = quantYForValue(0);
+      quantZeroLine.setAttribute("x1", leftX.toFixed(2));
+      quantZeroLine.setAttribute("x2", rightX.toFixed(2));
+      quantZeroLine.setAttribute("y1", zeroY.toFixed(2));
+      quantZeroLine.setAttribute("y2", zeroY.toFixed(2));
+
+      leftAxisTicks.forEach((node, i) => {
+        const value = sharedTicks[i];
+        if (value === undefined) {
+          node.style.display = "none";
+          return;
+        }
+        node.style.display = "block";
+        node.textContent = formatSignedPercent(value);
+        node.style.left = `${leftX - 6}px`;
+        node.style.top = `${quantYForValue(value)}px`;
+      });
+
+      rightAxisTicks.forEach((node, i) => {
+        const value = sharedTicks[i];
+        if (value === undefined) {
+          node.style.display = "none";
+          return;
+        }
+        node.style.display = "block";
+        node.textContent = formatSignedPercent(value);
+        node.style.left = `${rightX - 6}px`;
+        node.style.top = `${quantYForValue(value)}px`;
+      });
+
+      axisTitles.left.style.left = `${leftX + 2}px`;
+      axisTitles.left.style.top = `${quantTopY - 28}px`;
+      axisTitles.right.style.left = `${rightX - 2}px`;
+      axisTitles.right.style.top = `${quantTopY - 28}px`;
+      axisTitles.right.style.transform = "translateX(-100%)";
+      axisTitles.note.textContent = quantModeLabel;
+      axisTitles.note.style.left = `${leftX + 2}px`;
+      axisTitles.note.style.top = `${quantBottomY + 8}px`;
+      axisTitles.note.style.transform = "none";
+    }
+
+    function renderQuantEventMarkers() {
+      eventMarkerGroup.innerHTML = "";
+      const markerTopY = quantTopY;
+      const markerBottomY = quantBottomY;
+      quantAnnotationsConfig.forEach((ann, idx) => {
+        if (ann.year !== 1971) {
+          const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          line.setAttribute("x1", toX(ann.year).toFixed(2));
+          line.setAttribute("x2", toX(ann.year).toFixed(2));
+          line.setAttribute("y1", markerTopY.toFixed(2));
+          line.setAttribute("y2", markerBottomY.toFixed(2));
+          line.setAttribute("class", "quant-event-line");
+          eventMarkerGroup.appendChild(line);
+        }
+
+        const target = quantEventTargets[idx];
+        if (target) {
+          target.style.left = `${toX(ann.year)}px`;
+          target.style.top = `${markerTopY}px`;
+          target.style.height = `${Math.max(20, markerBottomY - markerTopY)}px`;
+        }
+      });
+      if (marker1971Static) {
+        marker1971Static.style.left = `${toX(1971)}px`;
+        marker1971Static.style.top = `${Math.max(8, quantTopY - 18)}px`;
+      }
+      hideQuantEventTooltip();
+    }
+
+    function renderDecadeGridAndMarker() {
+      decadeGridGroup.innerHTML = "";
+      const gridTopY = quantTopY;
+      const gridBottomY = quantBottomY;
+      tickYears.forEach((year) => {
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", toX(year).toFixed(2));
+        line.setAttribute("x2", toX(year).toFixed(2));
+        line.setAttribute("y1", gridTopY.toFixed(2));
+        line.setAttribute("y2", gridBottomY.toFixed(2));
+        line.setAttribute("class", `decade-grid-line${year % 20 === 0 ? " major" : ""}`);
+        decadeGridGroup.appendChild(line);
+      });
+
+      const markerTopY = 10;
+      const markerX = toX(1971);
+      marker1971Line.setAttribute("x1", markerX.toFixed(2));
+      marker1971Line.setAttribute("x2", markerX.toFixed(2));
+      marker1971Line.setAttribute("y1", markerTopY.toFixed(2));
+      marker1971Line.setAttribute("y2", gridBottomY.toFixed(2));
+    }
+
+    async function fetchCsvWithFallback(localUrl, remoteUrl) {
+      try {
+        const localRes = await fetch(localUrl);
+        if (localRes.ok) {
+          quantModeLabel = "Official local snapshot mode";
+          return await localRes.text();
+        }
+      } catch (err) {
+        // Fall through to remote fetch.
+      }
+
+      try {
+        const remoteRes = await fetch(remoteUrl);
+        if (remoteRes.ok) {
+          quantModeLabel = "Official BEA/FRED mode";
+          return await remoteRes.text();
+        }
+      } catch (err) {
+        // Final fallback handled by anchor data below.
+      }
+
+      return "";
+    }
+
+    async function loadQuantitativeData() {
+      // Pull official annual series and derive comparable percentages.
+      quantUsesFallback = false;
+      quantModeLabel = "Fallback data mode";
+      const [caCsv, gdpCsv, niipCsv, treasuryCsv] = await Promise.all([
+        fetchCsvWithFallback(dataEndpoints.currentAccountLocal, dataEndpoints.currentAccountRemote),
+        fetchCsvWithFallback(dataEndpoints.gdpLocal, dataEndpoints.gdpRemote),
+        fetchCsvWithFallback(dataEndpoints.niipLocal, dataEndpoints.niipRemote),
+        fetchCsvWithFallback(dataEndpoints.treasuryLocal, dataEndpoints.treasuryRemote)
+      ]);
+
+      const caMap = caCsv ? parseFredCsv(caCsv) : new Map();
+      const gdpMap = gdpCsv ? parseFredCsv(gdpCsv) : new Map();
+      const niipMap = niipCsv ? parseFredCsv(niipCsv) : new Map();
+      const treasuryMap = treasuryCsv ? parseFredCsv(treasuryCsv) : new Map();
+
+      const caYears = new Map();
+      caMap.forEach((caValue, year) => {
+        const gdp = gdpMap.get(year);
+        if (Number.isFinite(gdp) && gdp !== 0) {
+          caYears.set(year, (caValue / gdp) * 100);
+        }
+      });
+
+      const niipYears = new Map();
+      niipMap.forEach((niipValueMillions, year) => {
+        const gdp = gdpMap.get(year);
+        if (Number.isFinite(gdp) && gdp !== 0) {
+          niipYears.set(year, ((niipValueMillions / 1000) / gdp) * 100);
+        }
+      });
+
+      const treasuryYears = new Map();
+      treasuryMap.forEach((treasuryValueMillions, year) => {
+        const gdp = gdpMap.get(year);
+        if (Number.isFinite(gdp) && gdp !== 0) {
+          treasuryYears.set(year, ((treasuryValueMillions / 1000) / gdp) * 100);
+        }
+      });
+
+      // If NIIP fetch is unavailable, use the anchor table combined with fetched GDP.
+      if (!niipYears.size) {
+        niipAnchorData.forEach((point) => {
+          const gdp = gdpMap.get(point.year);
+          if (Number.isFinite(gdp) && gdp !== 0) {
+            niipYears.set(point.year, (point.niipUsdBillions / gdp) * 100);
+          }
+        });
+      }
+      let caSeries = toPointsByYear(caYears, (_, value) => value);
+      let niipSeries = toPointsByYear(niipYears, (_, value) => value);
+      let treasurySeries = toPointsByYear(treasuryYears, (_, value) => value);
+
+      if (!niipSeries.length) {
+        quantUsesFallback = true;
+        quantModeLabel = "Fallback data mode";
+        const gdpAnchors = new Map(gdpAnchorData.map((p) => [p.year, p.gdpUsdBillions]));
+        niipSeries = niipAnchorData
+          .map((point) => {
+            const gdp = gdpAnchors.get(point.year);
+            if (!Number.isFinite(gdp) || gdp === 0) return null;
+            return { year: point.year, value: (point.niipUsdBillions / gdp) * 100 };
+          })
+          .filter((p) => p && p.year >= minYear && p.year <= maxYear);
+        niipSeries = interpolateAnnualSeries(niipSeries);
+      }
+
+      if (!caSeries.length) {
+        quantUsesFallback = true;
+        quantModeLabel = "Fallback data mode";
+        caSeries = interpolateAnnualSeries(currentAccountPctAnchorData);
+      }
+
+      if (!treasurySeries.length) {
+        quantUsesFallback = true;
+        quantModeLabel = "Fallback data mode";
+        treasurySeries = interpolateAnnualSeries(foreignTreasuryPctAnchorData);
+      }
+
+      quantSeries = { ca: caSeries, niip: niipSeries, treasury: treasurySeries };
+
+      const allSeries = [...quantSeries.ca, ...quantSeries.niip, ...quantSeries.treasury];
+      const sharedExtent = combinedExtent(allSeries, -120, 40);
+      const paddedMin = Math.min(sharedExtent.min, -20);
+      const paddedMax = Math.max(sharedExtent.max, 20);
+      quantScales = {
+        min: paddedMin,
+        max: paddedMax,
+        logConstant: 10
+      };
+    }
+
     function computeLayout() {
       chartW = Math.max(chartInner.clientWidth, 320);
       chartH = Math.max(chartInner.clientHeight, 180);
       padX = Math.max(22, Math.min(54, Math.round(chartW * 0.045)));
       usableW = Math.max(1, chartW - padX * 2);
-      mainY = Math.round(chartH * 0.34);
-      reserveY = Math.round(chartH * 0.58);
-      decadeY = Math.round(chartH * 0.83);
+      mainY = Math.round(chartH * 0.22);
+      reserveY = Math.round(chartH * 0.40);
+      quantTopY = Math.round(chartH * 0.60);
+      quantBottomY = Math.round(chartH * 0.88);
+      decadeY = Math.round(chartH * 0.93);
       chartInner.style.height = `${chartH}px`;
       chartInner.querySelector(".trend").setAttribute("viewBox", `0 0 ${chartW} ${chartH}`);
     }
@@ -729,6 +1555,9 @@
 
     function applyResponsiveLayout() {
       computeLayout();
+      const isNarrow = window.innerWidth < 760;
+      ensureQuantDecorations();
+      renderDecadeGridAndMarker();
       const mainLine = `M${toX(minYear).toFixed(2)} ${mainY.toFixed(2)} L${toX(maxYear).toFixed(2)} ${mainY.toFixed(2)}`;
       mainBasePath.setAttribute("d", mainLine);
       trendPath.setAttribute("d", mainLine);
@@ -737,8 +1566,18 @@
       reservePath.setAttribute("d", reserveLine);
       const decadeLine = `M${toX(1860).toFixed(2)} ${decadeY.toFixed(2)} L${toX(2060).toFixed(2)} ${decadeY.toFixed(2)}`;
       decadePath.setAttribute("d", decadeLine);
-      mainTrackLabel.style.top = `${mainY - 64}px`;
-      reserveTrackLabel.style.top = `${reserveY - 52}px`;
+
+      renderQuantAxes();
+      const caD = buildSegmentedPath(quantSeries.ca, quantYForCurrentAccount);
+      const niipD = buildSegmentedPath(quantSeries.niip, quantYForNiip);
+      const treasuryD = buildSegmentedPath(quantSeries.treasury, quantYForTreasury);
+      quantCaPath.setAttribute("d", caD);
+      quantNiipPath.setAttribute("d", niipD);
+      quantTreasuryPath.setAttribute("d", treasuryD);
+      quantCaHitPath.setAttribute("d", caD);
+      quantNiipHitPath.setAttribute("d", niipD);
+      quantTreasuryHitPath.setAttribute("d", treasuryD);
+      renderQuantEventMarkers();
 
       points.forEach((el) => {
         const year = Number(el.dataset.year);
@@ -762,6 +1601,7 @@
         const year = Number(el.dataset.year);
         el.style.left = `${toX(year)}px`;
         el.style.top = `${decadeY + 7}px`;
+        el.style.display = isNarrow && year % 20 !== 0 ? "none" : "block";
       });
 
       const sortedAnchors = anchors
@@ -782,7 +1622,7 @@
       sortedAnchors.forEach((a) => {
         const node = anchors[a.i];
         const x = a.x;
-        const len = 24 + a.tier * 13;
+        const len = 24 + a.tier * 12;
         node.stem.style.left = `${x}px`;
         node.stem.style.top = `${mainY - len}px`;
         node.stem.style.height = `${len}px`;
@@ -808,7 +1648,7 @@
       sortedReserveAnchors.forEach((a) => {
         const node = reserveAnchors[a.i];
         const x = a.x;
-        const len = 20 + a.tier * 11;
+        const len = 14 + a.tier * 8;
         node.stem.style.left = `${x}px`;
         node.stem.style.top = `${reserveY + 1}px`;
         node.stem.style.height = `${len}px`;
@@ -845,8 +1685,20 @@
 
     drawAxisTicks();
     drawPoints();
+    quantCaHitPath.addEventListener("mouseenter", (event) => showSeriesTooltip("ca", event));
+    quantCaHitPath.addEventListener("mousemove", moveSeriesTooltip);
+    quantCaHitPath.addEventListener("mouseleave", hideSeriesTooltip);
+    quantNiipHitPath.addEventListener("mouseenter", (event) => showSeriesTooltip("niip", event));
+    quantNiipHitPath.addEventListener("mousemove", moveSeriesTooltip);
+    quantNiipHitPath.addEventListener("mouseleave", hideSeriesTooltip);
+    quantTreasuryHitPath.addEventListener("mouseenter", (event) => showSeriesTooltip("treasury", event));
+    quantTreasuryHitPath.addEventListener("mousemove", moveSeriesTooltip);
+    quantTreasuryHitPath.addEventListener("mouseleave", hideSeriesTooltip);
     applyResponsiveLayout();
     window.addEventListener("resize", applyResponsiveLayout);
+    loadQuantitativeData().then(() => {
+      applyResponsiveLayout();
+    });
     showDetail(1);
   </script>
 </body>

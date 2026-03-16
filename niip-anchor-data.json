@@ -1,0 +1,15 @@
+{
+  "niipAnchorData": [
+    { "year": 1976, "niipUsdBillions": 60 },
+    { "year": 1980, "niipUsdBillions": 140 },
+    { "year": 1985, "niipUsdBillions": 110 },
+    { "year": 1990, "niipUsdBillions": -300 },
+    { "year": 1995, "niipUsdBillions": -500 },
+    { "year": 2000, "niipUsdBillions": -1800 },
+    { "year": 2005, "niipUsdBillions": -2400 },
+    { "year": 2010, "niipUsdBillions": -2500 },
+    { "year": 2015, "niipUsdBillions": -7600 },
+    { "year": 2020, "niipUsdBillions": -14000 },
+    { "year": 2024, "niipUsdBillions": -26539 }
+  ]
+}
