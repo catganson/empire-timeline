@@ -149,6 +149,17 @@
       padding: 0 10px;
     }
 
+    .quant-panel-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #cfe2f6;
+      font-size: 0.72rem;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
     .year-tick {
       position: absolute;
       transform: translateX(-50%);
@@ -528,7 +539,7 @@
       <p class="influence-list">Alexandre Kojève • Carl Schmitt</p>
     </div>
     <div class="track-toggle" role="group" aria-label="Narrative track toggle">
-      <button id="togglePolitical" type="button" class="active" aria-pressed="true">Political Economy</button>
+      <button id="togglePolitical" type="button" class="active" aria-pressed="true">State Structure</button>
       <button id="toggleReserve" type="button" aria-pressed="false">Reserve System</button>
     </div>
     <p id="trackDescription" class="track-description"></p>
@@ -565,6 +576,7 @@
           <path id="reservePath" class="reserve-path" d=""></path>
           <path id="decadePath" class="decade-path" d=""></path>
         </svg>
+        <div id="quantPanelTitle" class="quant-panel-title">Balance of Payments</div>
       </div>
     </section>
     <p class="chart-scroll-hint">Swipe horizontally to explore the full timeline.</p>
@@ -842,7 +854,7 @@
         reserveRegime: "Potential digital dollar, stablecoin, or multipolar reserve system",
         usPosition: "Reserve issuer managing global liquidity",
         mechanism: "Treasury markets and digital financial infrastructure maintain global dollar dominance",
-        description: "Future reserve structures may incorporate digital currency infrastructure or new financial mechanisms. However, the fundamental dynamic will likely remain: global demand for dollar assets sustains the American financial system despite persistent deficits until a new monetary system replaces it.",
+        description: "Future reserve structures may incorporate digital currency infrastructure or new financial mechanisms. However, the fundamental dynamic will likely remain: global demand for dollar assets sustains the American financial system despite persistent deficits. A sustained decline in foreign purchases of U.S. Treasury securities would signal that this recycling mechanism is weakening and may indicate the gradual emergence of a new international monetary order.",
         year: 2042
       }
     ];
@@ -870,6 +882,7 @@
     const togglePolitical = document.getElementById("togglePolitical");
     const toggleReserve = document.getElementById("toggleReserve");
     const trackDescription = document.getElementById("trackDescription");
+    const quantPanelTitle = document.getElementById("quantPanelTitle");
 
     const minYear = 1860;
     const maxYear = 2065;
@@ -1355,6 +1368,7 @@
       axisTitles.note.style.left = `${leftX + 2}px`;
       axisTitles.note.style.top = `${quantBottomY + 8}px`;
       axisTitles.note.style.transform = "none";
+      quantPanelTitle.style.top = `${Math.round((mainY + quantTopY) / 2)}px`;
     }
 
     function renderQuantEventMarkers() {
@@ -1381,7 +1395,7 @@
       });
       if (marker1971Static) {
         marker1971Static.style.left = `${toX(1971)}px`;
-        marker1971Static.style.top = `${Math.max(8, quantTopY - 28)}px`;
+        marker1971Static.style.top = `${Math.max(8, quantTopY - 30)}px`;
       }
       hideQuantEventTooltip();
     }
@@ -1400,7 +1414,7 @@
         decadeGridGroup.appendChild(line);
       });
 
-      const markerTopY = quantTopY;
+      const markerTopY = Math.max(8, quantTopY - 16);
       const markerX = toX(1971);
       marker1971Line.setAttribute("x1", markerX.toFixed(2));
       marker1971Line.setAttribute("x2", markerX.toFixed(2));
@@ -1713,10 +1727,10 @@
         const extra = a.year === 1971 ? 16 : 0;
         const len = 14 + a.tier * 8 + extra;
         node.stem.style.left = `${x}px`;
-        node.stem.style.top = `${reserveY + 1}px`;
+        node.stem.style.top = `${reserveY - len}px`;
         node.stem.style.height = `${len}px`;
         node.label.style.left = `${x}px`;
-        node.label.style.top = `${reserveY + len + 4}px`;
+        node.label.style.top = `${reserveY - len - 16}px`;
         node.stem.style.display = isPoliticalActive ? "none" : "block";
         node.label.style.display = isPoliticalActive ? "none" : "block";
       });
