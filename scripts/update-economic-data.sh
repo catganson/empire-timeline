@@ -9,6 +9,8 @@ curl -fsSL "https://fred.stlouisfed.org/graph/fredgraph.csv?id=A124RC1A027NBEA" 
 curl -fsSL "https://fred.stlouisfed.org/graph/fredgraph.csv?id=GDPA" -o "$DATA_DIR/gdp.csv"
 curl -fsSL "https://fred.stlouisfed.org/graph/fredgraph.csv?id=IIPUSNETIA" -o "$DATA_DIR/niip.csv"
 curl -fsSL "https://fred.stlouisfed.org/graph/fredgraph.csv?id=ROWTSEA027N" -o "$DATA_DIR/foreign-treasury-holdings.csv"
+curl -fsSL "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BOPXG" -o "$DATA_DIR/exports-goods.csv"
+curl -fsSL "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BOPXS" -o "$DATA_DIR/exports-services.csv"
 
 echo "Updated:"
-ls -lh "$DATA_DIR"/current-account.csv "$DATA_DIR"/gdp.csv "$DATA_DIR"/niip.csv "$DATA_DIR"/foreign-treasury-holdings.csv
+ls -lh "$DATA_DIR"/current-account.csv "$DATA_DIR"/gdp.csv "$DATA_DIR"/niip.csv "$DATA_DIR"/foreign-treasury-holdings.csv "$DATA_DIR"/exports-goods.csv "$DATA_DIR"/exports-services.csv

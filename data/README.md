@@ -11,3 +11,5 @@ This writes official CSV snapshots used by `index.html`:
 - `gdp.csv` (GDPA)
 - `niip.csv` (IIPUSNETIA)
 - `foreign-treasury-holdings.csv` (ROWTSEA027N)
+- `exports-goods.csv` (BOPXG)
+- `exports-services.csv` (BOPXS)

@@ -94,14 +94,14 @@
       border-radius: 0;
       box-shadow: none;
       overflow: hidden;
-      padding: 22px 6px 12px;
+      padding: 2px 6px 12px;
     }
 
     .chart-inner {
       position: relative;
       width: 100%;
       min-width: 0;
-      height: 430px;
+      height: 560px;
     }
 
     .chart-scroll-hint {
@@ -256,6 +256,41 @@
       shape-rendering: crispEdges;
     }
 
+    .export-panel-bg {
+      fill: rgba(11, 30, 52, 0.4);
+      stroke: rgba(145, 178, 212, 0.2);
+      stroke-width: 1;
+    }
+
+    .export-inflection-band {
+      fill: rgba(255, 223, 164, 0.12);
+      pointer-events: none;
+    }
+
+    .export-area-goods {
+      fill: rgba(169, 198, 229, 0.28);
+      stroke: rgba(184, 211, 240, 0.88);
+      stroke-width: 1.25;
+    }
+
+    .export-area-services {
+      fill: rgba(121, 184, 166, 0.46);
+      stroke: rgba(141, 204, 186, 0.92);
+      stroke-width: 1.25;
+    }
+
+    .export-divider-path {
+      fill: none;
+      stroke: rgba(221, 236, 250, 0.92);
+      stroke-width: 1.4;
+    }
+
+    .export-hit-rect {
+      fill: transparent;
+      pointer-events: all;
+      cursor: crosshair;
+    }
+
     .quant-zero-line {
       stroke: rgba(255, 210, 133, 0.78);
       stroke-width: 1.2;
@@ -323,6 +358,35 @@
     .axis-title.interactive {
       pointer-events: auto;
       cursor: help;
+    }
+
+    .export-title {
+      position: absolute;
+      transform: translateX(-50%);
+      color: #dbeeff;
+      font-size: 0.73rem;
+      letter-spacing: 0.02em;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .export-subtitle {
+      position: absolute;
+      transform: translateX(-50%);
+      color: #b8d4ef;
+      font-size: 0.62rem;
+      letter-spacing: 0.01em;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .export-axis-label {
+      position: absolute;
+      color: #bcd8f2;
+      font-size: 0.58rem;
+      letter-spacing: 0.01em;
+      pointer-events: none;
+      white-space: nowrap;
     }
 
     .quant-event-line {
@@ -576,12 +640,12 @@
         overflow-x: auto;
         overflow-y: hidden;
         -webkit-overflow-scrolling: touch;
-        padding: 14px 0 12px;
+        padding: 2px 0 12px;
       }
 
       .chart-inner {
         width: max(1700px, 280vw);
-        height: 400px;
+        height: 520px;
       }
 
       .point {
@@ -648,6 +712,7 @@
           <g id="decadeGridGroup"></g>
           <g id="eventMarkerGroup"></g>
           <line id="marker1971Line" class="marker-1971-line" x1="0" y1="0" x2="0" y2="0"></line>
+          <line id="marker1971LineLower" class="marker-1971-line" x1="0" y1="0" x2="0" y2="0"></line>
           <rect id="quantPanelBg" class="quant-panel-bg" x="0" y="0" width="0" height="0"></rect>
           <line id="quantLeftAxis" class="quant-axis-line" x1="0" y1="0" x2="0" y2="0"></line>
           <line id="quantRightAxis" class="quant-axis-line" x1="0" y1="0" x2="0" y2="0"></line>
@@ -662,9 +727,18 @@
           <path id="trendPath" class="trend-path" d=""></path>
           <path id="reserveBasePath" class="reserve-base-path" d=""></path>
           <path id="reservePath" class="reserve-path" d=""></path>
+          <rect id="exportPanelBg" class="export-panel-bg" x="0" y="0" width="0" height="0"></rect>
+          <rect id="exportInflectionBand" class="export-inflection-band" x="0" y="0" width="0" height="0"></rect>
+          <path id="exportGoodsArea" class="export-area-goods" d=""></path>
+          <path id="exportServicesArea" class="export-area-services" d=""></path>
+          <path id="exportDividerPath" class="export-divider-path" d=""></path>
+          <rect id="exportHitRect" class="export-hit-rect" x="0" y="0" width="0" height="0"></rect>
           <path id="decadePath" class="decade-path" d=""></path>
         </svg>
         <div id="quantPanelTitle" class="quant-panel-title">Balance of Payments</div>
+        <div id="exportPanelTitle" class="export-title">Export Base Composition</div>
+        <div id="exportPanelSubtitle" class="export-subtitle">Real Goods vs Financial / Service Externalization</div>
+        <div id="exportAxisLabel" class="export-axis-label">% of Total U.S. Exports</div>
       </div>
     </section>
     <p class="chart-scroll-hint">Swipe horizontally to explore the full timeline.</p>
@@ -847,6 +921,26 @@
       },
       {
         era: 5,
+        title: "Collapse of the International Gold Standard",
+        dates: "1929-1931",
+        reserveRegime: "Breakdown of interwar gold exchange standard",
+        usPosition: "Creditor pivot amid systemic monetary breakdown",
+        mechanism: "Credit contraction halts debt recycling and forces countries off gold",
+        description: "The interwar gold system depended on continuous U.S. credit to sustain reparations and war-debt payments. The 1929 crash halted capital flows, triggering banking crises and gold outflows across Europe. Countries were forced to choose between deflation and abandoning gold. Britain’s exit in 1931 marked the collapse of the unified global gold standard and the end of automatic monetary discipline.",
+        year: 1931
+      },
+      {
+        era: 6,
+        title: "U.S. Monetary Sovereignty and Gold Revaluation",
+        dates: "1933-1934",
+        reserveRegime: "Domestic gold convertibility ended; managed dollar framework",
+        usPosition: "State-directed monetary authority",
+        mechanism: "Gold centralization and dollar devaluation expand policy autonomy",
+        description: "The United States ended domestic gold convertibility in 1933, centralized gold holdings, and devalued the dollar in 1934. This broke internal gold discipline and gave the state direct control over monetary policy. While gold remained in international settlements, the U.S. effectively shifted toward a politically managed monetary system, enabling later reserve currency dominance.",
+        year: 1933
+      },
+      {
+        era: 7,
         title: "World War II and the Bretton Woods Design",
         dates: "1939-1945",
         reserveRegime: "Transition to Bretton Woods system",
@@ -856,7 +950,7 @@
         year: 1942
       },
       {
-        era: 6,
+        era: 8,
         title: "Bretton Woods Creditor Empire",
         dates: "1945-1965",
         reserveRegime: "Gold-backed dollar system",
@@ -866,7 +960,7 @@
         year: 1955
       },
       {
-        era: 7,
+        era: 9,
         title: "Dollar Overhang and Bretton Woods Strain",
         dates: "1965-1971",
         reserveRegime: "Bretton Woods under pressure",
@@ -876,7 +970,7 @@
         year: 1968
       },
       {
-        era: 8,
+        era: 10,
         title: "The 1971 Monetary Break",
         dates: "1971",
         reserveRegime: "End of gold convertibility",
@@ -886,7 +980,7 @@
         year: 1971
       },
       {
-        era: 9,
+        era: 11,
         title: "Treasury-Bill Standard and Deficit Recycling",
         dates: "1971-1990",
         reserveRegime: "Treasury bond reserve system",
@@ -896,7 +990,7 @@
         year: 1981
       },
       {
-        era: 10,
+        era: 12,
         title: "Financial Globalization and Wall Street Expansion",
         dates: "1990-2008",
         reserveRegime: "Dollar-based global financial system",
@@ -906,7 +1000,7 @@
         year: 1999
       },
       {
-        era: 11,
+        era: 13,
         title: "Post-2008 Global Liquidity Regime",
         dates: "2008-2012",
         reserveRegime: "Central-bank-driven dollar liquidity system",
@@ -916,7 +1010,7 @@
         year: 2010
       },
       {
-        era: 12,
+        era: 14,
         title: "Asset Inflation and Financial Maintenance",
         dates: "2012-2019",
         reserveRegime: "Dollar liquidity supported by central banks and financial markets",
@@ -926,7 +1020,7 @@
         year: 2015
       },
       {
-        era: 13,
+        era: 15,
         title: "Strategic Technology and Defense Finance",
         dates: "2020-Present",
         reserveRegime: "Dollar system integrated with strategic industrial policy",
@@ -936,7 +1030,7 @@
         year: 2023
       },
       {
-        era: 14,
+        era: 16,
         title: "Possible Future Reserve Transition",
         dates: "Future Projection",
         reserveRegime: "Potential digital dollar, stablecoin, or multipolar reserve system",
@@ -956,6 +1050,7 @@
     const decadePath = document.getElementById("decadePath");
     const decadeGridGroup = document.getElementById("decadeGridGroup");
     const marker1971Line = document.getElementById("marker1971Line");
+    const marker1971LineLower = document.getElementById("marker1971LineLower");
     const quantPanelBg = document.getElementById("quantPanelBg");
     const quantLeftAxis = document.getElementById("quantLeftAxis");
     const quantRightAxis = document.getElementById("quantRightAxis");
@@ -967,10 +1062,19 @@
     const quantNiipHitPath = document.getElementById("quantNiipHitPath");
     const quantTreasuryHitPath = document.getElementById("quantTreasuryHitPath");
     const eventMarkerGroup = document.getElementById("eventMarkerGroup");
+    const exportPanelBg = document.getElementById("exportPanelBg");
+    const exportInflectionBand = document.getElementById("exportInflectionBand");
+    const exportGoodsArea = document.getElementById("exportGoodsArea");
+    const exportServicesArea = document.getElementById("exportServicesArea");
+    const exportDividerPath = document.getElementById("exportDividerPath");
+    const exportHitRect = document.getElementById("exportHitRect");
     const togglePolitical = document.getElementById("togglePolitical");
     const toggleReserve = document.getElementById("toggleReserve");
     const trackDescription = document.getElementById("trackDescription");
     const quantPanelTitle = document.getElementById("quantPanelTitle");
+    const exportPanelTitle = document.getElementById("exportPanelTitle");
+    const exportPanelSubtitle = document.getElementById("exportPanelSubtitle");
+    const exportAxisLabel = document.getElementById("exportAxisLabel");
 
     const minYear = 1860;
     const maxYear = 2065;
@@ -984,6 +1088,8 @@
     let reserveY = 0;
     let quantTopY = 0;
     let quantBottomY = 0;
+    let exportTopY = 0;
+    let exportBottomY = 0;
     let decadeY = 0;
 
     const toX = (year) => padX + ((year - minYear) / (maxYear - minYear)) * usableW;
@@ -1007,6 +1113,8 @@
     let activeNarrativeTrack = "political";
     let lastPoliticalIdx = 1;
     let lastReserveEra = 1;
+    let exportSeries = [];
+    let exportScaleMin = 50;
 
     const trackDescriptions = {
       political: "Institutional evolution of the American state and economy—from industrial capitalism and creditor power to a financialized, managerial system—along with possible future transformations of the structure.",
@@ -1027,10 +1135,14 @@
       gdpLocal: "data/gdp.csv",
       niipLocal: "data/niip.csv",
       treasuryLocal: "data/foreign-treasury-holdings.csv",
+      exportGoodsLocal: "data/exports-goods.csv",
+      exportServicesLocal: "data/exports-services.csv",
       currentAccountRemote: "https://fred.stlouisfed.org/graph/fredgraph.csv?id=A124RC1A027NBEA",
       gdpRemote: "https://fred.stlouisfed.org/graph/fredgraph.csv?id=GDPA",
       niipRemote: "https://fred.stlouisfed.org/graph/fredgraph.csv?id=IIPUSNETIA",
-      treasuryRemote: "https://fred.stlouisfed.org/graph/fredgraph.csv?id=ROWTSEA027N"
+      treasuryRemote: "https://fred.stlouisfed.org/graph/fredgraph.csv?id=ROWTSEA027N",
+      exportGoodsRemote: "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BOPXG",
+      exportServicesRemote: "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BOPXS"
     };
 
     const niipAnchorData = [
@@ -1160,6 +1272,21 @@
       { year: 2024, value: 30.5 }
     ];
 
+    const exportCompositionAnchorData = [
+      { year: 1900, goodsShare: 93, servicesShare: 7 },
+      { year: 1920, goodsShare: 93, servicesShare: 7 },
+      { year: 1945, goodsShare: 95, servicesShare: 5 },
+      { year: 1960, goodsShare: 94, servicesShare: 6 },
+      { year: 1965, goodsShare: 93, servicesShare: 7 },
+      { year: 1971, goodsShare: 86, servicesShare: 14 },
+      { year: 1980, goodsShare: 78, servicesShare: 22 },
+      { year: 1990, goodsShare: 71, servicesShare: 29 },
+      { year: 2000, goodsShare: 67, servicesShare: 33 },
+      { year: 2010, goodsShare: 64, servicesShare: 36 },
+      { year: 2020, goodsShare: 61, servicesShare: 39 },
+      { year: 2024, goodsShare: 60, servicesShare: 40 }
+    ];
+
     function hexToRgb(hex) {
       const clean = hex.replace("#", "");
       return {
@@ -1192,6 +1319,28 @@
         }
       }
       return values;
+    }
+
+    function parseFredCsvAnnualAverage(csvText) {
+      const rows = csvText.trim().split("\n");
+      if (rows.length < 2) return new Map();
+      const buckets = new Map();
+      for (let i = 1; i < rows.length; i += 1) {
+        const [dateRaw, valueRaw] = rows[i].split(",");
+        if (!dateRaw || !valueRaw || valueRaw === ".") continue;
+        const year = Number.parseInt(dateRaw.slice(0, 4), 10);
+        const value = Number(valueRaw);
+        if (!Number.isFinite(year) || !Number.isFinite(value)) continue;
+        if (!buckets.has(year)) buckets.set(year, []);
+        buckets.get(year).push(value);
+      }
+      const annual = new Map();
+      buckets.forEach((arr, year) => {
+        if (!arr.length) return;
+        const avg = arr.reduce((sum, v) => sum + v, 0) / arr.length;
+        annual.set(year, avg);
+      });
+      return annual;
     }
 
     function toPointsByYear(yearMap, valueFn) {
@@ -1243,6 +1392,74 @@
         prevYear = p.year;
       });
       return d.trim();
+    }
+
+    function interpolateAnnualComposition(anchorData) {
+      const sorted = [...anchorData].sort((a, b) => a.year - b.year);
+      const out = [];
+      for (let i = 0; i < sorted.length - 1; i += 1) {
+        const a = sorted[i];
+        const b = sorted[i + 1];
+        const span = Math.max(1, b.year - a.year);
+        for (let y = a.year; y < b.year; y += 1) {
+          const t = (y - a.year) / span;
+          const goodsShare = a.goodsShare + (b.goodsShare - a.goodsShare) * t;
+          out.push({ year: y, goodsShare, servicesShare: 100 - goodsShare });
+        }
+      }
+      const last = sorted[sorted.length - 1];
+      out.push({ year: last.year, goodsShare: last.goodsShare, servicesShare: last.servicesShare });
+      return out.filter((p) => p.year >= minYear && p.year <= maxYear);
+    }
+
+    function mergeAnchorAndObservedComposition(anchorSeries, observedSeries) {
+      if (!observedSeries.length) return anchorSeries;
+      const observedByYear = new Map(observedSeries.map((p) => [p.year, p]));
+      const firstObservedYear = observedSeries[0].year;
+      const merged = [];
+      anchorSeries.forEach((p) => {
+        if (p.year < firstObservedYear) merged.push(p);
+      });
+      observedSeries.forEach((p) => merged.push(p));
+      return merged
+        .filter((p) => p.year >= minYear && p.year <= maxYear)
+        .filter((p, idx, arr) => idx === arr.findIndex((q) => q.year === p.year))
+        .sort((a, b) => a.year - b.year);
+    }
+
+    function applyRegimeShape(series, anchorSeries) {
+      if (!series.length) return series;
+      const anchorByYear = new Map(anchorSeries.map((p) => [p.year, p]));
+      return series.map((p) => {
+        const anchor = anchorByYear.get(p.year) || p;
+        let w = 0.25;
+        if (p.year >= 1945 && p.year <= 1965) w = 0.35; // postwar plateau framing
+        if (p.year > 1965 && p.year <= 1980) w = 0.65; // compressed structural break
+        if (p.year > 1980) w = 0.5; // new regime baseline
+        const goodsShare = Math.max(0, Math.min(100, p.goodsShare * (1 - w) + anchor.goodsShare * w));
+        return { year: p.year, goodsShare, servicesShare: 100 - goodsShare };
+      });
+    }
+
+    function exportY(sharePct) {
+      const clamped = Math.max(exportScaleMin, Math.min(100, sharePct));
+      const range = Math.max(1, 100 - exportScaleMin);
+      const t = (clamped - exportScaleMin) / range;
+      return exportBottomY - t * (exportBottomY - exportTopY);
+    }
+
+    function buildAreaPath(points, topFn, bottomFn) {
+      if (!points.length) return "";
+      let d = "";
+      points.forEach((p, idx) => {
+        d += `${idx === 0 ? "M" : "L"}${toX(p.year).toFixed(2)} ${topFn(p).toFixed(2)} `;
+      });
+      for (let i = points.length - 1; i >= 0; i -= 1) {
+        const p = points[i];
+        d += `L${toX(p.year).toFixed(2)} ${bottomFn(p).toFixed(2)} `;
+      }
+      d += "Z";
+      return d;
     }
 
     function symlog(value, c = 10) {
@@ -1527,7 +1744,105 @@
       axisTitles.note.style.left = `${leftX + 2}px`;
       axisTitles.note.style.top = `${quantBottomY + 8}px`;
       axisTitles.note.style.transform = "none";
-      quantPanelTitle.style.top = `${Math.round((mainY + quantTopY) / 2)}px`;
+      quantPanelTitle.style.top = `${quantTopY - 52}px`;
+    }
+
+    function renderExportPanel() {
+      const leftX = toX(minYear);
+      const rightX = toX(maxYear);
+      exportPanelBg.setAttribute("x", leftX.toFixed(2));
+      exportPanelBg.setAttribute("y", exportTopY.toFixed(2));
+      exportPanelBg.setAttribute("width", (rightX - leftX).toFixed(2));
+      exportPanelBg.setAttribute("height", (exportBottomY - exportTopY).toFixed(2));
+      const inflectX = toX(1968);
+      const inflectW = Math.max(4, toX(1975) - toX(1968));
+      exportInflectionBand.setAttribute("x", inflectX.toFixed(2));
+      exportInflectionBand.setAttribute("y", exportTopY.toFixed(2));
+      exportInflectionBand.setAttribute("width", inflectW.toFixed(2));
+      exportInflectionBand.setAttribute("height", (exportBottomY - exportTopY).toFixed(2));
+
+      exportPanelTitle.style.left = `${(leftX + rightX) / 2}px`;
+      exportPanelTitle.style.top = `${exportTopY - 34}px`;
+      exportPanelSubtitle.style.left = `${(leftX + rightX) / 2}px`;
+      exportPanelSubtitle.style.top = `${exportTopY - 18}px`;
+      exportAxisLabel.style.left = `${leftX + 2}px`;
+      exportAxisLabel.style.top = `${exportTopY + 2}px`;
+
+      if (!exportSeries.length) {
+        exportGoodsArea.setAttribute("d", "");
+        exportServicesArea.setAttribute("d", "");
+        exportDividerPath.setAttribute("d", "");
+      } else {
+        const goodsAreaD = buildAreaPath(
+          exportSeries,
+          (p) => exportY(p.goodsShare),
+          () => exportY(0)
+        );
+        const servicesAreaD = buildAreaPath(
+          exportSeries,
+          () => exportY(100),
+          (p) => exportY(p.goodsShare)
+        );
+        const dividerD = buildSegmentedPath(
+          exportSeries.map((p) => ({ year: p.year, value: p.goodsShare })),
+          exportY
+        );
+        exportGoodsArea.setAttribute("d", goodsAreaD);
+        exportServicesArea.setAttribute("d", servicesAreaD);
+        exportDividerPath.setAttribute("d", dividerD);
+      }
+
+      exportHitRect.setAttribute("x", leftX.toFixed(2));
+      exportHitRect.setAttribute("y", exportTopY.toFixed(2));
+      exportHitRect.setAttribute("width", (rightX - leftX).toFixed(2));
+      exportHitRect.setAttribute("height", (exportBottomY - exportTopY).toFixed(2));
+    }
+
+    function nearestExportPoint(clientX) {
+      if (!exportSeries.length) return null;
+      const rect = chartInner.getBoundingClientRect();
+      const relX = clientX - rect.left;
+      let best = exportSeries[0];
+      let bestDist = Math.abs(toX(best.year) - relX);
+      for (let i = 1; i < exportSeries.length; i += 1) {
+        const p = exportSeries[i];
+        const dist = Math.abs(toX(p.year) - relX);
+        if (dist < bestDist) {
+          best = p;
+          bestDist = dist;
+        }
+      }
+      return best;
+    }
+
+    function showExportTooltip(event) {
+      if (!quantSeriesTooltip) return;
+      const rect = chartInner.getBoundingClientRect();
+      const relX = event.clientX - rect.left;
+      const inTransitionBand = relX >= toX(1968) && relX <= toX(1975);
+      if (inTransitionBand) {
+        showExportBandTooltip(event);
+        return;
+      }
+      const point = nearestExportPoint(event.clientX);
+      if (!point) return;
+      quantSeriesTooltip.innerHTML = `
+        <strong>Export Base Composition (${point.year})</strong><br>
+        Goods: ${point.goodsShare.toFixed(1)}%<br>
+        Services: ${point.servicesShare.toFixed(1)}%
+      `;
+      positionSeriesTooltipNearCursor(event);
+      quantSeriesTooltip.style.display = "block";
+    }
+
+    function showExportBandTooltip(event) {
+      if (!quantSeriesTooltip) return;
+      quantSeriesTooltip.innerHTML = `
+        <strong>Structural Transition (Late 1960s–1970s)</strong><br>
+        Shift from goods-dominant export base toward services and financial externalization, aligned with the breakdown of the Bretton Woods system.
+      `;
+      positionSeriesTooltipNearCursor(event);
+      quantSeriesTooltip.style.display = "block";
     }
 
     function renderQuantEventMarkers() {
@@ -1561,16 +1876,27 @@
 
     function renderDecadeGridAndMarker() {
       decadeGridGroup.innerHTML = "";
-      const gridTopY = quantTopY;
-      const gridBottomY = quantBottomY;
+      const upperGridTopY = quantTopY;
+      const upperGridBottomY = quantBottomY;
+      const lowerGridTopY = exportTopY;
+      const lowerGridBottomY = exportBottomY;
       tickYears.forEach((year) => {
-        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        line.setAttribute("x1", toX(year).toFixed(2));
-        line.setAttribute("x2", toX(year).toFixed(2));
-        line.setAttribute("y1", gridTopY.toFixed(2));
-        line.setAttribute("y2", gridBottomY.toFixed(2));
-        line.setAttribute("class", `decade-grid-line${year % 20 === 0 ? " major" : ""}`);
-        decadeGridGroup.appendChild(line);
+        const className = `decade-grid-line${year % 20 === 0 ? " major" : ""}`;
+        const upperLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        upperLine.setAttribute("x1", toX(year).toFixed(2));
+        upperLine.setAttribute("x2", toX(year).toFixed(2));
+        upperLine.setAttribute("y1", upperGridTopY.toFixed(2));
+        upperLine.setAttribute("y2", upperGridBottomY.toFixed(2));
+        upperLine.setAttribute("class", className);
+        decadeGridGroup.appendChild(upperLine);
+
+        const lowerLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        lowerLine.setAttribute("x1", toX(year).toFixed(2));
+        lowerLine.setAttribute("x2", toX(year).toFixed(2));
+        lowerLine.setAttribute("y1", lowerGridTopY.toFixed(2));
+        lowerLine.setAttribute("y2", lowerGridBottomY.toFixed(2));
+        lowerLine.setAttribute("class", className);
+        decadeGridGroup.appendChild(lowerLine);
       });
 
       const markerTopY = Math.max(8, quantTopY - 16);
@@ -1578,7 +1904,11 @@
       marker1971Line.setAttribute("x1", markerX.toFixed(2));
       marker1971Line.setAttribute("x2", markerX.toFixed(2));
       marker1971Line.setAttribute("y1", markerTopY.toFixed(2));
-      marker1971Line.setAttribute("y2", gridBottomY.toFixed(2));
+      marker1971Line.setAttribute("y2", upperGridBottomY.toFixed(2));
+      marker1971LineLower.setAttribute("x1", markerX.toFixed(2));
+      marker1971LineLower.setAttribute("x2", markerX.toFixed(2));
+      marker1971LineLower.setAttribute("y1", lowerGridTopY.toFixed(2));
+      marker1971LineLower.setAttribute("y2", lowerGridBottomY.toFixed(2));
     }
 
     async function fetchCsvWithFallback(localUrl, remoteUrl) {
@@ -1697,17 +2027,59 @@
       };
     }
 
+    async function loadExportCompositionData() {
+      const [goodsCsv, servicesCsv] = await Promise.all([
+        fetchCsvWithFallback(dataEndpoints.exportGoodsLocal, dataEndpoints.exportGoodsRemote),
+        fetchCsvWithFallback(dataEndpoints.exportServicesLocal, dataEndpoints.exportServicesRemote)
+      ]);
+
+      const goodsMap = goodsCsv ? parseFredCsvAnnualAverage(goodsCsv) : new Map();
+      const servicesMap = servicesCsv ? parseFredCsvAnnualAverage(servicesCsv) : new Map();
+      const rows = [];
+      goodsMap.forEach((goodsValue, year) => {
+        const servicesValue = servicesMap.get(year);
+        if (!Number.isFinite(servicesValue)) return;
+        const total = goodsValue + servicesValue;
+        if (!Number.isFinite(total) || total <= 0) return;
+        const goodsShare = (goodsValue / total) * 100;
+        rows.push({
+          year,
+          goodsShare,
+          servicesShare: 100 - goodsShare
+        });
+      });
+
+      const observedSeries = rows
+        .filter((p) => p.year >= minYear && p.year <= maxYear)
+        .sort((a, b) => a.year - b.year);
+      const anchorSeries = interpolateAnnualComposition(exportCompositionAnchorData);
+
+      // This panel complements the BoP layer above by showing export composition
+      // (real-economy goods/services mix), not direct capital-account inflows.
+      exportSeries = applyRegimeShape(
+        mergeAnchorAndObservedComposition(anchorSeries, observedSeries),
+        anchorSeries
+      );
+
+      const minGoods = exportSeries.length
+        ? exportSeries.reduce((min, p) => Math.min(min, p.goodsShare), 100)
+        : 60;
+      exportScaleMin = Math.max(40, Math.floor((minGoods - 6) / 10) * 10);
+    }
+
     function computeLayout() {
       chartW = Math.max(chartInner.clientWidth, 320);
       chartH = Math.max(chartInner.clientHeight, 180);
       padX = Math.max(22, Math.min(54, Math.round(chartW * 0.045)));
       usableW = Math.max(1, chartW - padX * 2);
-      const sharedNarrativeY = Math.round(chartH * 0.31);
+      const sharedNarrativeY = Math.round(chartH * 0.22);
       mainY = sharedNarrativeY;
       reserveY = sharedNarrativeY;
-      quantTopY = Math.round(chartH * 0.60);
-      quantBottomY = Math.round(chartH * 0.88);
-      decadeY = Math.round(chartH * 0.93);
+      quantTopY = Math.round(chartH * 0.50);
+      quantBottomY = Math.round(chartH * 0.71);
+      exportTopY = Math.round(chartH * 0.81);
+      exportBottomY = Math.round(chartH * 0.93);
+      decadeY = Math.round(chartH * 0.965);
       chartInner.style.height = `${chartH}px`;
       chartInner.querySelector(".trend").setAttribute("viewBox", `0 0 ${chartW} ${chartH}`);
     }
@@ -1808,6 +2180,7 @@
       quantCaHitPath.setAttribute("d", caD);
       quantNiipHitPath.setAttribute("d", niipD);
       quantTreasuryHitPath.setAttribute("d", treasuryD);
+      renderExportPanel();
       renderQuantEventMarkers();
 
       points.forEach((el) => {
@@ -1871,7 +2244,7 @@
       lastX = -Infinity;
       tier = 0;
       sortedReserveAnchors.forEach((a) => {
-        if (a.x - lastX < 34) {
+        if (a.x - lastX < 44) {
           tier = (tier + 1) % 3;
         } else {
           tier = 0;
@@ -1884,7 +2257,7 @@
         const node = reserveAnchors[a.i];
         const x = a.x;
         const extra = a.year === 1971 ? 16 : 0;
-        const len = 14 + a.tier * 8 + extra;
+        const len = 18 + a.tier * 14 + extra;
         node.stem.style.left = `${x}px`;
         node.stem.style.top = `${reserveY - len}px`;
         node.stem.style.height = `${len}px`;
@@ -1959,11 +2332,14 @@
     quantTreasuryHitPath.addEventListener("mouseenter", (event) => showSeriesTooltip("treasury", event));
     quantTreasuryHitPath.addEventListener("mousemove", moveSeriesTooltip);
     quantTreasuryHitPath.addEventListener("mouseleave", hideSeriesTooltip);
+    exportHitRect.addEventListener("mouseenter", showExportTooltip);
+    exportHitRect.addEventListener("mousemove", showExportTooltip);
+    exportHitRect.addEventListener("mouseleave", hideSeriesTooltip);
     togglePolitical.addEventListener("click", () => setActiveNarrativeTrack("political"));
     toggleReserve.addEventListener("click", () => setActiveNarrativeTrack("reserve"));
     applyResponsiveLayout();
     window.addEventListener("resize", applyResponsiveLayout);
-    loadQuantitativeData().then(() => {
+    Promise.all([loadQuantitativeData(), loadExportCompositionData()]).then(() => {
       applyResponsiveLayout();
     });
     setActiveNarrativeTrack("political");
