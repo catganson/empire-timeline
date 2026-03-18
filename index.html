@@ -25,21 +25,64 @@
       box-sizing: border-box;
     }
 
+    html {
+      min-height: 100%;
+      background: #0c2340;
+    }
+
     body {
       position: relative;
       margin: 0;
       font-family: "Avenir Next", "Century Gothic", "Futura", "Trebuchet MS", sans-serif;
       color: var(--ink);
-      background: linear-gradient(160deg, #0c2340 0%, #10325b 52%, #14406f 100%);
-      min-height: 100vh;
+      background: transparent;
+      min-height: 100dvh;
       overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background: linear-gradient(160deg, #0c2340 0%, #10325b 52%, #14406f 100%);
+    }
+
+    .top-nav {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      align-items: center;
+      white-space: nowrap;
+      margin-top: 12px;
+    }
+
+    .top-nav a {
+      text-decoration: none;
+      color: #c6def4;
+      font-size: 0.94rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      transition: color 140ms ease, filter 140ms ease;
+    }
+
+    .top-nav a:hover {
+      color: #eef6ff;
+      filter: brightness(1.08);
+    }
+
+    .top-nav a.active {
+      color: #eef6ff;
     }
 
     .wrap {
       width: 100%;
       max-width: none;
       margin: 0;
-      padding: 56px clamp(12px, 3.2vw, 40px) 34px;
+      padding: 30px clamp(12px, 3.2vw, 40px) 34px;
       display: flex;
       flex-direction: column;
     }
@@ -631,7 +674,16 @@
     }
 
     @media (max-width: 760px) {
+      .top-nav {
+        gap: 12px;
+      }
+
+      .top-nav a {
+        font-size: 0.84rem;
+      }
+
       .wrap {
+        padding-top: 24px;
         padding-left: 8px;
         padding-right: 8px;
       }
@@ -681,6 +733,10 @@
   </style>
 </head>
 <body>
+  <nav class="top-nav" aria-label="Site navigation">
+    <a href="./index.html" class="active">Timelines</a>
+    <a href="./predictions.html">Predictions</a>
+  </nav>
   <main class="wrap">
     <h1>Structural Transformation of the American Political Economy</h1>
     <h2>Transition from Trade-Surplus Creditor Power to Deficit-Financed Reserve System</h2>
@@ -2075,7 +2131,7 @@
       const sharedNarrativeY = Math.round(chartH * 0.22);
       mainY = sharedNarrativeY;
       reserveY = sharedNarrativeY;
-      quantTopY = Math.round(chartH * 0.50);
+      quantTopY = Math.round(chartH * 0.44);
       quantBottomY = Math.round(chartH * 0.71);
       exportTopY = Math.round(chartH * 0.81);
       exportBottomY = Math.round(chartH * 0.93);
@@ -2343,6 +2399,7 @@
       applyResponsiveLayout();
     });
     setActiveNarrativeTrack("political");
+
   </script>
 </body>
 </html>
